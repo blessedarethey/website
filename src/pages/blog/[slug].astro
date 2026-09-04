@@ -1,20 +1,180 @@
 ---
+import { toHTML } from '@portabletext/to-html';
 import Layout from '../../layouts/Layout.astro';
 import { getBlogPost } from '../../lib/sanity';
 
+const THEME_LABELS = { good: 'The Good', true: 'The True', beautiful: 'The Beautiful' };
+
 const { slug } = Astro.params;
-const post = slug ? await getBlogPost(slug) : null;
+let post: Awaited<ReturnType<typeof getBlogPost>> = null;
+
+try {
+  post = slug ? await getBlogPost(slug) : null;
+} catch {
+  // Feed unreachable — fall back to the index page's own error state
+  // rather than 500ing here.
+}
 
 if (!post) {
   return Astro.redirect('/blog');
 }
+
+const bodyHtml = post.body ? toHTML(post.body as any) : '';
+// Only one founder's signature graphic exists so far — everyone else's
+// "Written by" just shows their name as plain text until a matching
+// signature image is added.
+const signatureSrc =
+  post.author?.toLowerCase().includes('denise')
+    ? '/uploads/signature-denise.png'
+    : null;
 ---
 
-<Layout title={post.title}>
-  <article>
-    <h1>{post.title}</h1>
-    <p><em>{new Date(post.publishedAt).toLocaleDateString()}</em></p>
-    {post.excerpt && <p>{post.excerpt}</p>}
-    <!-- Full body rendering (Sanity's Portable Text) gets wired up once real post content exists. -->
+<Layout title={post.title} description={post.excerpt} active="blog">
+  <section class="hero">
+    <div class="heroInner">
+      {post.theme && (
+        <p class="heroEyebrow">{THEME_LABELS[post.theme]}</p>
+      )}
+      <h1 class="heroTitle">{post.title}</h1>
+      {post.excerpt && <p class="heroSubtitle">{post.excerpt}</p>}
+    </div>
+  </section>
+
+  <article class="article">
+    <div class="articleInner" set:html={bodyHtml} />
+    {(post.author || signatureSrc) && (
+      <div class="signature">
+        <p class="signatureLabel">Written by:</p>
+        {signatureSrc ? (
+          <img src={signatureSrc} alt={post.author} class="signatureImg" />
+        ) : (
+          <p class="signatureName">{post.author}</p>
+        )}
+      </div>
+    )}
   </article>
+
+  <section class="backRow">
+    <a href="/blog" class="backButton">&larr; Back to the blog</a>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroInner {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .heroEyebrow {
+    margin: 0 0 14px;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-amber);
+  }
+
+  .heroTitle {
+    font-size: 52px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.18;
+    margin: 0 0 14px;
+    color: var(--color-stone);
+  }
+
+  .heroSubtitle {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--color-stone);
+    opacity: 0.85;
+  }
+
+  .article {
+    padding: 56px 48px 64px;
+  }
+
+  .articleInner {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 19px;
+    line-height: 1.75;
+    opacity: 0.9;
+  }
+
+  .articleInner :global(p) {
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+
+  .articleInner :global(strong) {
+    color: var(--color-heading);
+  }
+
+  .articleInner :global(blockquote) {
+    margin: 0 0 20px;
+    padding-left: 22px;
+    border-left: 2px solid var(--color-amber);
+    font-style: italic;
+  }
+
+  .signature {
+    max-width: 720px;
+    margin: 44px auto 0;
+    padding-top: 44px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .signatureLabel {
+    margin: 0 0 10px;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .signatureImg {
+    height: 58px;
+    width: auto;
+    display: block;
+  }
+
+  .signatureName {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+  }
+
+  .backRow {
+    padding: 40px 48px 56px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .backRow {
+    text-align: center;
+  }
+
+  .backButton {
+    display: inline-block;
+    padding: 15px 36px;
+    border: 1px solid var(--color-deep-sage);
+    border-radius: 999px;
+    font-size: 16px;
+    color: var(--color-charcoal);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .backButton:hover {
+    background: var(--color-deep-rose);
+    color: var(--color-white);
+    border-color: var(--color-deep-rose);
+  }
+</style>

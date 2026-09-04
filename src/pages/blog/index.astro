@@ -1,6 +1,32 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getBlogPosts } from '../../lib/sanity';
+import { getBlogPosts, type BlogTheme } from '../../lib/sanity';
+
+// The three columns and their descriptions are fixed editorial content
+// from the design (not Sanity) — each shows that theme's most recent
+// published post underneath, or "no posts yet" if none exist. Posts are
+// tagged with a theme in Sanity (see studio/schemaTypes/post.ts) so
+// staff can publish new ones without any code changes here.
+const THEMES: { key: BlogTheme; label: string; accent: string; blurb: string }[] = [
+  {
+    key: 'good',
+    label: 'The Good',
+    accent: 'var(--color-sage)',
+    blurb: 'On being made good, on purpose — and what changes when a child hears it that way.',
+  },
+  {
+    key: 'true',
+    label: 'The True',
+    accent: 'var(--color-amber)',
+    blurb: 'Plain answers about the body, named accurately, and where the science meets the faith.',
+  },
+  {
+    key: 'beautiful',
+    label: 'The Beautiful',
+    accent: 'var(--color-rose)',
+    blurb: 'On living it out loud — vocation, marriage, and a life that does not apologize for itself.',
+  },
+];
 
 let posts: Awaited<ReturnType<typeof getBlogPosts>> = [];
 let fetchError = false;
@@ -12,26 +38,319 @@ try {
   // render the page instead of crashing the build.
   fetchError = true;
 }
+
+// posts is already sorted newest-first, so the first match per theme is
+// that theme's latest post.
+const latestByTheme = THEMES.map((t) => ({
+  ...t,
+  post: posts.find((p) => p.theme === t.key),
+}));
 ---
 
-<Layout title="Blog" description="Blessed Are They blog" active="blog">
-  <h1>Blog</h1>
+<Layout title="Blog" description="Blessed Are They blog — essays, reflections, and answers." active="blog">
+  <section class="hero">
+    <h1 class="heroTitle">Blog</h1>
+  </section>
 
-  {fetchError && (
-    <p>
-      Couldn't load posts from Sanity yet — check that the <code>production</code>
-      dataset and a <code>post</code> document type exist.
-    </p>
-  )}
+  <section class="intro">
+    <div class="introInner">
+      <h2 class="introHeading">From the table</h2>
+      <div class="tagRow">
+        <span class="tagRule" />
+        <p class="tag">Essays &middot; Reflections &middot; Answers</p>
+        <span class="tagRule" />
+      </div>
+      <p class="introBody">
+        Short pieces on the questions families are actually asking — and
+        what the Church has to say about them.
+      </p>
+    </div>
+  </section>
 
-  {!fetchError && posts.length === 0 && <p>No posts published yet.</p>}
+  <section class="posts">
+    <div class="postsInner">
+      <h2 class="postsHeading">The Posts</h2>
 
-  <ul>
-    {posts.map((post) => (
-      <li>
-        <a href={`/blog/${post.slug}`}>{post.title}</a>
-        {post.excerpt && <p>{post.excerpt}</p>}
-      </li>
-    ))}
-  </ul>
+      {fetchError && (
+        <p class="fetchError">
+          Couldn't load posts from Sanity right now — try again shortly.
+        </p>
+      )}
+
+      {!fetchError && (
+        <div class="themeGrid">
+          {latestByTheme.map((theme) => (
+            <div class="themeCard" style={{ '--accent': theme.accent }}>
+              <span class="themeBar" />
+              <div class="themeCardBody">
+                <p class="themeLabel">{theme.label}</p>
+                <p class="themeBlurb">{theme.blurb}</p>
+                {theme.post ? (
+                  <a href={`/blog/${theme.post.slug}`} class="postEntry">
+                    <p class="postTitle">{theme.post.title}</p>
+                    {theme.post.excerpt && (
+                      <p class="postExcerpt">{theme.post.excerpt}</p>
+                    )}
+                    <p class="postReadMore">Read the post &rarr;</p>
+                  </a>
+                ) : (
+                  <div class="postEmpty">
+                    <p>No posts yet — first one is being written.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="topic">
+    <div class="topicInner">
+      <h2 class="topicHeading">Have a topic in mind?</h2>
+      <p class="topicBody">
+        The questions you are already asking at home are the ones worth
+        writing about.
+      </p>
+      <a
+        class="button"
+        href="mailto:hello@blessedarethey.com?subject=I'd%20love%20to%20hear%20more%20about%20this..."
+      >
+        Email us
+      </a>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .intro {
+    padding: 48px 48px 52px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+  }
+
+  .introInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .introHeading {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    margin: 0 0 26px;
+    color: var(--color-heading);
+  }
+
+  .tagRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .tagRule {
+    display: block;
+    width: 42px;
+    height: 2px;
+    background: var(--color-amber);
+  }
+
+  .tag {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-light);
+  }
+
+  .introBody {
+    font-size: 21px;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin: 0 auto;
+    max-width: 800px;
+    text-wrap: pretty;
+  }
+
+  .posts {
+    padding: 48px 48px 56px;
+    background: var(--color-white);
+  }
+
+  .postsInner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .postsHeading {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.15;
+    margin: 0 0 36px;
+    text-align: center;
+    color: var(--color-heading);
+  }
+
+  .fetchError {
+    text-align: center;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  .themeGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    align-items: stretch;
+  }
+
+  .themeCard {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-cream);
+    border: 1px solid var(--color-stone);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .themeBar {
+    display: block;
+    height: 6px;
+    background: var(--accent, var(--color-sage));
+  }
+
+  .themeCardBody {
+    padding: 26px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .themeLabel {
+    margin: 0 0 10px;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-heading);
+  }
+
+  .themeBlurb {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.7;
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+
+  .postEmpty {
+    padding: 22px 0;
+    border-top: 1px solid var(--color-stone);
+    margin-top: auto;
+  }
+
+  .postEmpty p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .postEntry {
+    display: block;
+    padding: 22px 0;
+    border-top: 1px solid var(--color-stone);
+    color: var(--color-charcoal);
+    margin-top: auto;
+  }
+
+  .postEntry:hover {
+    color: var(--color-deep-rose);
+  }
+
+  .postTitle {
+    font-size: 27px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    color: inherit;
+  }
+
+  .postExcerpt {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.78;
+    margin: 0 0 12px;
+    color: var(--color-charcoal);
+  }
+
+  .postReadMore {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-deep-rose);
+  }
+
+  .topic {
+    padding: 48px 48px 56px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .topicInner {
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .topicHeading {
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0 0 18px;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .topicBody {
+    font-size: 18px;
+    line-height: 1.68;
+    opacity: 0.82;
+    margin: 0 0 30px;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .themeGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

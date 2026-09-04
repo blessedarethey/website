@@ -21,25 +21,29 @@ export const sanity = createClient({
 // Sanity schema still exists in studio/ but is currently unused by the
 // site.
 
+export type BlogTheme = 'good' | 'true' | 'beautiful';
+
 export type BlogPost = {
   _id: string;
   title: string;
   slug: string;
   publishedAt: string;
   excerpt?: string;
+  theme?: BlogTheme;
+  author?: string;
   body?: unknown;
 };
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
   return sanity.fetch(`*[_type == "post"] | order(publishedAt desc){
-    _id, title, "slug": slug.current, publishedAt, excerpt
+    _id, title, "slug": slug.current, publishedAt, excerpt, theme, author
   }`);
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   return sanity.fetch(
     `*[_type == "post" && slug.current == $slug][0]{
-      _id, title, "slug": slug.current, publishedAt, excerpt, body
+      _id, title, "slug": slug.current, publishedAt, excerpt, theme, author, body
     }`,
     { slug }
   );
