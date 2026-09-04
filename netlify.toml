@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Netlify auto-detects Astro's SSR output via @astrojs/netlify — this file
+# just pins the build command explicitly rather than relying on autodetection.

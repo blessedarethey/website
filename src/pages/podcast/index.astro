@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEpisodes } from '../../lib/sanity';
+
+let episodes: Awaited<ReturnType<typeof getEpisodes>> = [];
+let fetchError = false;
+
+try {
+  episodes = await getEpisodes();
+} catch {
+  fetchError = true;
+}
+---
+
+<Layout title="Podcast" description="Blessed Are They podcast">
+  <h1>Podcast</h1>
+
+  {fetchError && (
+    <p>
+      Couldn't load episodes from Sanity yet — check that the <code>production</code>
+      dataset and an <code>episode</code> document type exist.
+    </p>
+  )}
+
+  {!fetchError && episodes.length === 0 && <p>No episodes published yet.</p>}
+
+  <ul>
+    {episodes.map((ep) => (
+      <li>
+        <a href={`/podcast/${ep.slug}`}>{ep.title}</a>
+        {ep.description && <p>{ep.description}</p>}
+      </li>
+    ))}
+  </ul>
+</Layout>

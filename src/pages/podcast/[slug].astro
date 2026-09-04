@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEpisode } from '../../lib/sanity';
+
+const { slug } = Astro.params;
+const episode = slug ? await getEpisode(slug) : null;
+
+if (!episode) {
+  return Astro.redirect('/podcast');
+}
+---
+
+<Layout title={episode.title}>
+  <article>
+    <h1>{episode.title}</h1>
+    <p><em>{new Date(episode.publishedAt).toLocaleDateString()}</em></p>
+    {episode.audioUrl && (
+      <audio controls src={episode.audioUrl}>
+        Your browser doesn't support embedded audio.
+      </audio>
+    )}
+    {episode.description && <p>{episode.description}</p>}
+  </article>
+</Layout>

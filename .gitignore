@@ -1,0 +1,14 @@
+# build output
+dist/
+.astro/
+.netlify/
+
+# dependencies
+node_modules/
+
+# environment variables (real secrets never get committed)
+.env
+.env.production
+
+# editor / OS
+.DS_Store

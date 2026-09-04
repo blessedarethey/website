@@ -1,0 +1,20 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getBlogPost } from '../../lib/sanity';
+
+const { slug } = Astro.params;
+const post = slug ? await getBlogPost(slug) : null;
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+---
+
+<Layout title={post.title}>
+  <article>
+    <h1>{post.title}</h1>
+    <p><em>{new Date(post.publishedAt).toLocaleDateString()}</em></p>
+    {post.excerpt && <p>{post.excerpt}</p>}
+    <!-- Full body rendering (Sanity's Portable Text) gets wired up once real post content exists. -->
+  </article>
+</Layout>

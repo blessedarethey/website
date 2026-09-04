@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getBlogPosts } from '../../lib/sanity';
+
+let posts: Awaited<ReturnType<typeof getBlogPosts>> = [];
+let fetchError = false;
+
+try {
+  posts = await getBlogPosts();
+} catch {
+  // Sanity project/dataset or the "post" schema may not exist yet —
+  // render the page instead of crashing the build.
+  fetchError = true;
+}
+---
+
+<Layout title="Blog" description="Blessed Are They blog">
+  <h1>Blog</h1>
+
+  {fetchError && (
+    <p>
+      Couldn't load posts from Sanity yet — check that the <code>production</code>
+      dataset and a <code>post</code> document type exist.
+    </p>
+  )}
+
+  {!fetchError && posts.length === 0 && <p>No posts published yet.</p>}
+
+  <ul>
+    {posts.map((post) => (
+      <li>
+        <a href={`/blog/${post.slug}`}>{post.title}</a>
+        {post.excerpt && <p>{post.excerpt}</p>}
+      </li>
+    ))}
+  </ul>
+</Layout>
