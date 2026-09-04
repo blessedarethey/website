@@ -1,0 +1,234 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const FEATURES = [
+  {
+    title: 'Video Library',
+    body: 'Every three-part series, streaming and ready to play in the classroom, organized by grade level.',
+  },
+  {
+    title: 'Facilitator Guides',
+    body: 'Lesson plans, learning objectives, and a script you can follow, written so the material does not assume you have taught it before.',
+  },
+  {
+    title: 'Discussion Questions',
+    body: 'Prompts for the classroom and companion questions to send home, so what is taught in class continues at the kitchen table.',
+  },
+];
+---
+
+<Layout
+  title="Educator Portal"
+  description="Everything teachers and catechists need to teach the Blessed Are They curriculum."
+  active="educator-portal"
+>
+  <section class="hero">
+    <h1 class="heroTitle">Educator Portal</h1>
+  </section>
+
+  <section class="intro">
+    <div class="introInner">
+      <h2 class="introHeading">Everything You Need to Teach It</h2>
+      <div class="tagRow">
+        <span class="tagRule" />
+        <p class="tag">For Teachers &amp; Catechists</p>
+        <span class="tagRule" />
+      </div>
+      <p class="introBody">
+        A single place to find the videos, the lesson plans, and the
+        answers — no prior training in the subject required.
+      </p>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="featuresInner">
+      {FEATURES.map((f) => (
+        <div class="featureCard">
+          <h3 class="featureTitle">{f.title}</h3>
+          <p class="featureBody">{f.body}</p>
+          <span class="inDev">In development</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="request">
+    <div class="requestInner">
+      <span class="rule" />
+      <h2 class="requestHeading">Request Access</h2>
+      <p class="requestBody">
+        The portal opens with Phase I. Tell us about your school or parish
+        and we will reach out when it is ready.
+      </p>
+      <a
+        class="button"
+        href="mailto:hello@blessedarethey.com?subject=Educator%20Portal%20access"
+      >
+        Request Access
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .intro {
+    padding: 48px 48px 52px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+  }
+
+  .introInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .introHeading {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    margin: 0 0 26px;
+    color: var(--color-heading);
+  }
+
+  .tagRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .tagRule {
+    display: block;
+    width: 42px;
+    height: 2px;
+    background: var(--color-amber);
+  }
+
+  .tag {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-light);
+  }
+
+  .introBody {
+    font-size: 21px;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin: 0 auto;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+
+  .features {
+    padding: 64px 48px 68px;
+    background: var(--color-white);
+  }
+
+  .featuresInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .featureCard {
+    background: var(--color-cream);
+    border: 1px solid var(--color-stone);
+    border-radius: 16px;
+    padding: 40px 34px 36px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .featureTitle {
+    font-size: 27px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 14px;
+    color: var(--color-heading);
+  }
+
+  .featureBody {
+    font-size: 16px;
+    line-height: 1.68;
+    opacity: 0.8;
+    margin: 0 0 22px;
+    text-wrap: pretty;
+  }
+
+  .inDev {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 6px 14px;
+    background: var(--color-stone);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .request {
+    padding: 56px 48px 64px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .requestInner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .requestHeading {
+    font-size: 34px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-heading);
+  }
+
+  .requestBody {
+    font-size: 18px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin: 0;
+    max-width: 620px;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .featuresInner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
