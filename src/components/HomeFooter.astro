@@ -1,0 +1,134 @@
+---
+// Homepage-only footer — cream, matches the footer built directly into
+// Homepage.dc.html (distinct from SiteFooter.astro, used everywhere else).
+---
+
+<footer class="footer">
+  <div class="inner">
+    <img class="wordmark" src="/uploads/slogan3.jpg" alt="Blessed Are They" />
+
+    <nav class="nav">
+      <a href="/about">About</a>
+      <a href="/curriculum">Curriculum</a>
+      <a href="/events">Events</a>
+      <a href="/podcast">Podcasts</a>
+      <a href="/resources">Resources</a>
+      <a href="/donate">Donate</a>
+      <a href="mailto:hello@blessedarethey.com">Contact</a>
+    </nav>
+
+    <div class="socials">
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+      <a href="#">Facebook</a>
+    </div>
+
+    <div class="listenBlock">
+      <p class="listenCopy">
+        How to listen: subscribe (it&rsquo;s free) in your favorite podcast
+        app.
+      </p>
+      <div class="listenLinks">
+        <a href="#">Apple Podcasts</a>
+        <a href="#">Spotify</a>
+        <a href="#">YouTube</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+
+    <div class="legalRow">
+      <span>106 Public Square, Suite 115 &middot; Gallatin, TN 37066</span>
+      <span>&copy; 2026 Blessed Are They &middot; 501(c)(3)</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-cream);
+    color: var(--color-charcoal);
+    padding: 76px 48px 40px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 28px;
+  }
+
+  .wordmark {
+    height: 34px;
+    width: auto;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+
+  .nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 15px;
+  }
+
+  .socials {
+    display: flex;
+    gap: 22px;
+    font-size: 15px;
+  }
+
+  .listenBlock {
+    width: 100%;
+    padding-top: 34px;
+    border-top: 1px solid var(--color-stone);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .listenCopy {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.75;
+  }
+
+  .listenLinks {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .listenLinks a {
+    padding: 10px 22px;
+    border: 1px solid #d8b9ab;
+    border-radius: 999px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-charcoal);
+  }
+
+  .listenLinks a:hover {
+    border-color: var(--color-deep-rose);
+  }
+
+  .legalRow {
+    width: 100%;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-stone);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    opacity: 0.65;
+  }
+</style>

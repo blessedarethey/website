@@ -1,0 +1,180 @@
+---
+// Dark footer for every page except the Homepage, which keeps its own
+// cream footer (see HomeFooter.astro) — matches SiteFooter.dc.html from
+// the design handoff.
+---
+
+<footer class="site-footer">
+  <div class="inner">
+    <div class="grid">
+      <div>
+        <div class="brand">
+          <span class="badge badge--logo">
+            <img src="/uploads/BATlogo.jpg" alt="" />
+          </span>
+          <span class="badge badge--wordmark">
+            <img src="/uploads/slogan3.jpg" alt="Blessed Are They" />
+          </span>
+        </div>
+        <p class="tagline">
+          Catholic Reproductive Health Education for families, schools, and
+          parishes.
+        </p>
+      </div>
+
+      <div class="col">
+        <p class="colLabel">Contact</p>
+        <a href="mailto:hello@blessedarethey.com">hello@blessedarethey.com</a>
+        <span class="address">106 Public Square, <br />Suite 115<br />Gallatin, TN 37066</span>
+      </div>
+
+      <div class="col">
+        <p class="colLabel">Explore</p>
+        <a href="/about">About</a>
+        <a href="/curriculum">Curriculum</a>
+        <a href="/events">Events</a>
+        <a href="/podcast">Podcasts</a>
+        <a href="/blog">Blog</a>
+        <a href="/resources">Resources</a>
+        <a href="/donate">Donate</a>
+      </div>
+
+      <div class="col">
+        <p class="colLabel">Follow</p>
+        <a href="#">Instagram</a>
+        <a href="#">YouTube</a>
+        <a href="#">Facebook</a>
+        <a href="#">Newsletter</a>
+      </div>
+    </div>
+
+    <div class="legalRow">
+      <p class="copyright">&copy; 2026 Blessed Are They &middot; 501(c)(3)</p>
+      <div class="legalLinks">
+        <a href="#">Privacy</a>
+        <a href="#">Login</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-charcoal-light);
+    color: var(--color-cream);
+    padding: 72px 48px 40px;
+  }
+
+  .inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(253, 244, 230, 0.18);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-cream);
+  }
+
+  .badge img {
+    display: block;
+    mix-blend-mode: multiply;
+  }
+
+  .badge--logo {
+    padding: 8px 10px 10px;
+    border-radius: 26px 26px 5px 5px;
+  }
+
+  .badge--logo img {
+    height: 44px;
+    width: auto;
+  }
+
+  .badge--wordmark {
+    padding: 10px 16px;
+    border-radius: 8px;
+  }
+
+  .badge--wordmark img {
+    height: 30px;
+    width: auto;
+  }
+
+  .tagline {
+    font-size: 15px;
+    line-height: 1.65;
+    opacity: 0.72;
+    margin: 0;
+    max-width: 300px;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .col a {
+    color: var(--color-amber);
+    font-size: 15px;
+  }
+
+  .colLabel {
+    margin: 0 0 4px;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    color: var(--color-cream);
+  }
+
+  .address {
+    font-size: 15px;
+    opacity: 0.72;
+    line-height: 1.5;
+  }
+
+  .legalRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .copyright {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.6;
+  }
+
+  .legalLinks {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .legalLinks a {
+    font-size: 13px;
+    color: var(--color-cream);
+    opacity: 0.6;
+  }
+</style>

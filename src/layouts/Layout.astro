@@ -1,14 +1,25 @@
 ---
 import '../styles/global.css';
 import { NAV_ITEMS, DONATE_HREF, type NavKey } from '../lib/nav';
+import HomeFooter from '../components/HomeFooter.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 interface Props {
   title: string;
   description?: string;
   active?: NavKey;
+  /** 'home' gets the Homepage's own cream footer; every other page gets
+   *  the shared dark SiteFooter. Defaults to 'site' since most pages are
+   *  not the homepage. */
+  footer?: 'home' | 'site';
 }
 
-const { title, description = 'Blessed Are They', active } = Astro.props;
+const {
+  title,
+  description = 'Blessed Are They',
+  active,
+  footer = 'site',
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -68,49 +79,7 @@ const { title, description = 'Blessed Are They', active } = Astro.props;
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <div class="site-footer__inner">
-        <img
-          class="site-footer__wordmark"
-          src="/uploads/slogan3.jpg"
-          alt="Blessed Are They"
-        />
-
-        <nav class="site-footer__nav">
-          <a href="/about">About</a>
-          <a href="/curriculum">Curriculum</a>
-          <a href="/events">Events</a>
-          <a href="/podcast">Podcasts</a>
-          <a href="/resources">Resources</a>
-          <a href={DONATE_HREF}>Donate</a>
-          <a href="mailto:hello@blessedarethey.com">Contact</a>
-        </nav>
-
-        <div class="site-footer__socials">
-          <a href="#">Instagram</a>
-          <a href="#">YouTube</a>
-          <a href="#">Facebook</a>
-        </div>
-
-        <div class="site-footer__listen">
-          <p class="site-footer__listen-copy">
-            How to listen: subscribe (it&rsquo;s free) in your favorite
-            podcast app.
-          </p>
-          <div class="site-footer__listen-links">
-            <a href="#">Apple Podcasts</a>
-            <a href="#">Spotify</a>
-            <a href="#">YouTube</a>
-            <a href="#">RSS</a>
-          </div>
-        </div>
-
-        <div class="site-footer__legal">
-          <span>106 Public Square, Suite 115 &middot; Gallatin, TN 37066</span>
-          <span>&copy; 2026 Blessed Are They &middot; 501(c)(3)</span>
-        </div>
-      </div>
-    </footer>
+    {footer === 'home' ? <HomeFooter /> : <SiteFooter />}
 
     <style>
       .utility-bar {
@@ -214,94 +183,6 @@ const { title, description = 'Blessed Are They', active } = Astro.props;
       .nav__donate:hover {
         background: var(--color-deep-rose-hover);
         color: var(--color-white);
-      }
-
-      .site-footer {
-        background: var(--color-cream);
-        color: var(--color-charcoal);
-        padding: 76px 48px 40px;
-        border-top: 1px solid var(--color-stone);
-      }
-
-      .site-footer__inner {
-        max-width: 1000px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 28px;
-      }
-
-      .site-footer__wordmark {
-        height: 34px;
-        width: auto;
-        display: block;
-        mix-blend-mode: multiply;
-      }
-
-      .site-footer__nav {
-        display: flex;
-        gap: 28px;
-        flex-wrap: wrap;
-        justify-content: center;
-        font-size: 15px;
-      }
-
-      .site-footer__socials {
-        display: flex;
-        gap: 22px;
-        font-size: 15px;
-      }
-
-      .site-footer__listen {
-        width: 100%;
-        padding-top: 34px;
-        border-top: 1px solid var(--color-stone);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .site-footer__listen-copy {
-        margin: 0;
-        font-size: 15px;
-        opacity: 0.75;
-      }
-
-      .site-footer__listen-links {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .site-footer__listen-links a {
-        padding: 10px 22px;
-        border: 1px solid #d8b9ab;
-        border-radius: 999px;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--color-charcoal);
-      }
-
-      .site-footer__listen-links a:hover {
-        border-color: var(--color-deep-rose);
-      }
-
-      .site-footer__legal {
-        width: 100%;
-        padding-top: 24px;
-        border-top: 1px solid var(--color-stone);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 24px;
-        flex-wrap: wrap;
-        font-size: 13px;
-        opacity: 0.65;
       }
 
       main {

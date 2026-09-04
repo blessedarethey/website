@@ -1,37 +1,625 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisodes } from '../../lib/podcast';
 
-let episodes: Awaited<ReturnType<typeof getEpisodes>> = [];
-let fetchError = false;
+const FEED_URL = 'https://anchor.fm/s/116517680/podcast/rss';
 
-try {
-  episodes = await getEpisodes();
-} catch {
-  // Feed host down, URL changed, or malformed XML — render the page
-  // instead of crashing the build.
-  fetchError = true;
-}
+const MIC_PATHS = [
+  'M32 6a9 9 0 0 1 9 9v14a9 9 0 0 1-18 0V15a9 9 0 0 1 9-9Z',
+  'M18 28v2a14 14 0 0 0 28 0v-2',
+  'M32 44v11',
+  'M22 55h20',
+];
+
+const FIRST_SERIES = [
+  {
+    n: 'Episode 1',
+    title: 'Who We Are',
+    body: 'An introduction to ourselves, to our hearts, and to the heart behind the mission of BAT.',
+  },
+  {
+    n: 'Episode 2',
+    title: 'The Good',
+    body: 'What it means to be made good — on purpose — and why that is where every conversation about the body has to start.',
+  },
+  {
+    n: 'Episode 3',
+    title: 'The True',
+    body: 'Naming the body accurately, and why the truth about how we are made was never meant to stop at biology.',
+  },
+  {
+    n: 'Episode 4',
+    title: 'The Beautiful',
+    body: 'Why a life lived in the light of all this is not something to hide or apologize for, but something to live out loud.',
+  },
+];
+
+const SECOND_SERIES = [
+  {
+    n: 'Episode 5',
+    title: 'The Birds',
+    body: 'You guessed it: female anatomy.',
+  },
+  {
+    n: 'Episode 6',
+    title: 'The Bees',
+    body: 'Makes sense, right? Male anatomy.',
+  },
+  {
+    n: 'Episode 7',
+    title: 'Designed for Complementarity',
+    body: 'How the male and female design is perfectly complementary.',
+  },
+  {
+    n: 'Episode 8',
+    title: 'Designed for Communion',
+    body: 'How the male and female bodies are designed to be in communion.',
+  },
+];
+
+const HOSTS = [
+  {
+    label: 'The Good',
+    name: 'Tuzdy Currlin, MD',
+    role: 'Pediatrician · Co-founder',
+    photo: '/uploads/Tuzdy Currlin, MD.JPG',
+    objectPosition: '47% 22%',
+    bio: 'Tuzdy brings a contemplative, reflective voice rooted in Scripture and the tradition of the Catholic Church. As a pediatrician and mother of four, she has spent years watching children grow — in her clinic, on playgrounds, at church, and around her own kitchen table — and has become deeply convinced that every person longs to know who they are and what they were made for.',
+    href: '/podcast/hosts/tuzdy',
+  },
+  {
+    label: 'The True',
+    name: 'Denise Montagnino, DO, MPH',
+    role: 'Obstetrician/Gynecologist · Co-founder',
+    photo: '/uploads/Denise.jpg',
+    objectPosition: '50% 20%',
+    bio: "Denise's voice brings the blunt, no-nonsense honesty of an OB/GYN who has spent years in the exam and delivery room for the most vulnerable, sacred moments of a woman's life. She's heard it all — the fear behind the fertility questions, the grief behind the miscarriages, the shame women carry when nobody ever told them the truth about how they're made — and she has zero patience for pretending it's just biology.",
+    href: '/podcast/hosts/denise',
+  },
+  {
+    label: 'The Beautiful',
+    name: 'Kirsten King, BA, MSW',
+    role: 'Fundraising & Communications Director · Co-founder',
+    photo: '/uploads/ChatGPT Image Aug 24, 2026, 05_54_31 PM.png',
+    objectPosition: '50% 25%',
+    bio: "Kirsten's voice brings an authentic, raw, and sometimes delightfully unfiltered perspective on faith, sexuality, marriage and family life. As a mother of four and a motherless daughter herself from a young age, she brings a unique perspective to the joys, wounds, questions, and unexpected grace that shape a family. She's comfortable being uncomfortable and says the things that we are all thinking but might not have the courage to say.",
+    href: '/podcast/hosts/kirsten',
+  },
+];
 ---
 
 <Layout title="Podcast" description="Blessed Are They podcast" active="podcast">
-  <h1>Podcast</h1>
+  <section class="hero">
+    <h1 class="heroTitle">Podcast</h1>
+  </section>
 
-  {fetchError && (
-    <p>
-      Couldn't load episodes from the podcast feed right now — try again
-      shortly.
+  <section class="subscribe">
+    <a class="button button--large" href={FEED_URL}>Subscribe to the BAT Podcast</a>
+    <div class="spacer" />
+    <svg
+      class="mic"
+      viewBox="0 0 64 64"
+      width="60"
+      height="60"
+      fill="none"
+      stroke="#3A3A42"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      role="img"
+      aria-label="Microphone"
+    >
+      {MIC_PATHS.map((d) => <path d={d} />)}
+    </svg>
+    <h2 class="subscribeTitle">Testing, One, Two&hellip;</h2>
+    <div class="intro">
+      <p>
+        We are three mothers. Two of us are physicians, one of us has spent
+        her life in ministry. And we are done acting like faith and truth
+        belong in separate rooms.
+      </p>
+      <p>
+        Here is the thing we believe, and we think you will feel it too once
+        you hear it: you were made good. On purpose. Made for something
+        worth living out loud — not quietly, not apologetically, but
+        beautifully.
+      </p>
+      <p>
+        Each episode, we bring three voices to the table — medical,
+        developmental, and spiritual — and we do not let any one of them
+        carry the whole conversation alone. That is on purpose. The body is
+        not just a science topic, and it is not just a theology topic. It is
+        both, held together, and kids can tell when adults are only willing
+        to talk about half of it.
+      </p>
+      <p>
+        Everything we do is framed around the good, the true, and the
+        beautiful. We dig into Scripture, into real science, and into the
+        questions your kids are actually going to ask — the ones that show
+        up in the car, at bedtime, or completely out of nowhere at a large
+        family dinner. We hand you language you can actually use, no
+        theology degree and no perfect parenting required. This is for
+        parents raising kids they love fiercely, and for couples building a
+        marriage that lasts.
+      </p>
+      <p class="last">
+        Wherever you are starting from — lifelong Catholic, newly curious, or
+        just trying to figure out what to say to your own kids — pull up a
+        chair. You are welcome at this table.
+      </p>
+    </div>
+  </section>
+
+  <section class="series">
+    <div class="seriesIntro">
+      <p class="eyebrow eyebrow--sm">Podcast</p>
+      <h2 class="seriesHeading">The First Series</h2>
+    </div>
+    <div class="seriesCard">
+      <svg
+        class="mic mic--card"
+        viewBox="0 0 64 64"
+        width="72"
+        height="72"
+        fill="none"
+        stroke="#3A3A42"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        role="img"
+        aria-label="Microphone"
+      >
+        {MIC_PATHS.map((d) => <path d={d} />)}
+      </svg>
+      <h3 class="seriesTitle">The Foundation</h3>
+      <div class="episodeGrid">
+        {FIRST_SERIES.map((ep) => (
+          <div class="episodeRow">
+            <p class="episodeNum">{ep.n}</p>
+            <div>
+              <p class="episodeTitle">{ep.title}</p>
+              <p class="episodeBody">{ep.body}</p>
+            </div>
+          </div>
+        ))}
+        <p class="seriesClose">
+          Start here and you will know what we are building.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="series">
+    <div class="seriesIntro">
+      <p class="eyebrow eyebrow--sm">Podcast</p>
+      <h2 class="seriesHeading seriesHeading--lg">The Second Series</h2>
+    </div>
+    <div class="seriesCard">
+      <svg
+        class="mic mic--card"
+        viewBox="0 0 64 64"
+        width="72"
+        height="72"
+        fill="none"
+        stroke="#3A3A42"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        role="img"
+        aria-label="Microphone"
+      >
+        {MIC_PATHS.map((d) => <path d={d} />)}
+      </svg>
+      <h3 class="seriesTitle">The Birds &amp; the Bees</h3>
+      <div class="episodeGrid">
+        {SECOND_SERIES.map((ep) => (
+          <div class="episodeRow">
+            <p class="episodeNum">{ep.n}</p>
+            <div>
+              <p class="episodeTitle">{ep.title}</p>
+              <p class="episodeBody">{ep.body}</p>
+            </div>
+          </div>
+        ))}
+        <p class="seriesClose">
+          Here is where we hand you the language — so you can find your own
+          voice for it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="voices" class="voices">
+    <div class="voicesIntro">
+      <p class="eyebrow eyebrow--sm">Introducing the BAT Girls</p>
+      <h2 class="voicesHeading">Three Voices, One Conversation</h2>
+      <p class="voicesLede">
+        A Pediatrician who converted. An OB/GYN who woke up. A cradle
+        Catholic in ministry. <br />Put us in a room and give us a mic&hellip;
+        you never know what can sprout!
+      </p>
+    </div>
+    <div class="hostGrid">
+      {HOSTS.map((host) => (
+        <div class="hostCard">
+          <div class="hostPhoto">
+            <img
+              src={host.photo}
+              alt={host.name}
+              style={{ objectPosition: host.objectPosition }}
+            />
+          </div>
+          <p class="hostLabel">{host.label}</p>
+          <h3 class="hostName">{host.name}</h3>
+          <p class="hostRole">{host.role}</p>
+          <span class="rule" />
+          <div class="hostBio">
+            <p>{host.bio}</p>
+          </div>
+          <p class="hostReadMore">
+            <a href={host.href}>Read more &rarr;</a>
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="submitTopic">
+    <svg
+      class="mic mic--question"
+      viewBox="0 0 64 64"
+      width="72"
+      height="72"
+      fill="none"
+      stroke="#3A3A42"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      role="img"
+      aria-label="Question mark"
+    >
+      <path d="M22 22a10 10 0 1 1 15.5 8.4C34 32.8 32 35 32 39v2" />
+      <path d="M32 51h.02" stroke-width="4.5" />
+    </svg>
+    <p class="eyebrow">Submit a topic</p>
+    <h2 class="submitHeading">What&rsquo;s on Your Mind?</h2>
+    <p class="submitBody">
+      The questions you are already asking at home are the ones worth an
+      episode.
     </p>
-  )}
-
-  {!fetchError && episodes.length === 0 && <p>No episodes published yet.</p>}
-
-  <ul>
-    {episodes.map((ep) => (
-      <li>
-        <a href={`/podcast/${ep.slug}`}>{ep.title}</a>
-        {ep.description && <div set:html={ep.description} />}
-      </li>
-    ))}
-  </ul>
+    <a
+      class="button button--large"
+      href="mailto:hello@blessedarethey.com?subject=I'd%20love%20to%20hear%20more%20about%20this..."
+    >
+      Send us a topic
+    </a>
+    <p class="submitNote">Opens an email to hello@blessedarethey.com</p>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .subscribe {
+    padding: 24px 48px 28px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .spacer {
+    height: 24px;
+  }
+
+  .mic {
+    display: block;
+    margin: 0 auto 18px;
+  }
+
+  .subscribeTitle {
+    font-size: 45px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    margin: 0 0 24px;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .intro {
+    font-size: 19px;
+    line-height: 1.7;
+    opacity: 0.85;
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  .intro p {
+    margin: 0 0 16px;
+  }
+
+  .intro p.last {
+    margin: 0;
+  }
+
+  .series {
+    padding: 40px 48px 48px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .seriesIntro {
+    max-width: 1140px;
+    margin: 0 auto 26px;
+    text-align: center;
+  }
+
+  .eyebrow--sm {
+    font-size: 20px;
+  }
+
+  .seriesHeading {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.14;
+    margin: 0;
+    color: var(--color-heading);
+  }
+
+  .seriesHeading--lg {
+    font-size: 46px;
+  }
+
+  .seriesCard {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 40px 44px 38px;
+    background: var(--color-white);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mic--card {
+    margin: 0 0 14px;
+  }
+
+  .seriesTitle {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.22;
+    margin: 0 0 20px;
+    max-width: 520px;
+    color: var(--color-heading);
+  }
+
+  .episodeGrid {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 40px;
+    text-align: left;
+  }
+
+  .episodeRow {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .episodeNum {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-heading);
+    white-space: nowrap;
+  }
+
+  .episodeTitle {
+    margin: 0 0 4px;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.3;
+    color: var(--color-charcoal-light);
+  }
+
+  .episodeBody {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    opacity: 0.85;
+    text-wrap: pretty;
+  }
+
+  .seriesClose {
+    grid-column: 1 / -1;
+    margin: 20px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-stone);
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--color-heading);
+  }
+
+  .voices {
+    padding: 40px 48px 48px;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .voicesIntro {
+    max-width: 1180px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+
+  .voicesHeading {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0 auto 18px;
+    color: var(--color-heading);
+  }
+
+  .voicesLede {
+    font-size: 18px;
+    line-height: 1.65;
+    opacity: 0.8;
+    margin: 0 auto;
+  }
+
+  .hostGrid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px;
+    align-items: start;
+  }
+
+  .hostCard {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hostPhoto {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 220px 220px 14px 14px;
+    border: 1px solid var(--color-stone);
+    overflow: hidden;
+    background: var(--color-cream);
+    margin-bottom: 28px;
+  }
+
+  .hostPhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hostLabel {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--color-heading);
+    margin: 0 0 12px;
+  }
+
+  .hostName {
+    font-family: 'Sorts Mill Goudy', Georgia, serif;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.16;
+    margin: 0 0 10px;
+    text-wrap: pretty;
+  }
+
+  .hostRole {
+    margin: 0 0 20px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-deep-rose);
+  }
+
+  .hostCard .rule {
+    margin-bottom: 22px;
+  }
+
+  .hostBio {
+    font-size: 17px;
+    line-height: 1.72;
+    opacity: 0.85;
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  .hostBio p {
+    margin: 0 0 14px;
+  }
+
+  .hostReadMore {
+    margin: 18px 0 0;
+  }
+
+  .hostReadMore a {
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .submitTopic {
+    padding: 40px 48px 48px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .mic--question {
+    margin-bottom: 20px;
+  }
+
+  .submitHeading {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.3;
+    margin: 0 0 20px;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .submitBody {
+    font-size: 18px;
+    line-height: 1.7;
+    opacity: 0.84;
+    margin: 0 0 34px;
+  }
+
+  .submitNote {
+    margin: 20px 0 0;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+</style>
