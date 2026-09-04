@@ -8,4 +8,10 @@ export default defineConfig({
   output: 'server',
   adapter: netlify(),
   site: 'https://blessedarethey.org', // TODO: replace with the real domain once purchased/confirmed
+  // The Netlify adapter auto-enables session storage via Netlify Blobs unless
+  // told otherwise, which pushed the account toward a paid plan before we
+  // needed it. Nothing on the site uses sessions yet — turn this back on
+  // (remove the `false` and configure a driver) once the subscriber-login
+  // phase actually needs them.
+  session: false,
 });
