@@ -1,0 +1,149 @@
+/* Design tokens — pulled from the Blessed Are They logo (see the Claude
+   Design handoff: project/README.md in the design-export repo). */
+:root {
+  /* Surfaces */
+  --color-cream: #fdf4e6;
+  --color-stone: #e8d5cb;
+  --color-white: #ffffff;
+
+  /* Accents (fills only — none of these pass WCAG contrast as text) */
+  --color-amber: #f5c67e;
+  --color-rose: #d8909c;
+  --color-sage: #9cb484;
+
+  /* Text */
+  --color-charcoal: #2f2f38;
+  --color-charcoal-light: #4c4c58; /* lightened backdrop for hero/donate bands */
+  --color-heading: #3a3a42;
+  --color-deep-rose: #9e4257; /* primary button + link color */
+  --color-deep-rose-hover: #7e3345;
+  --color-deep-sage: #5a7048;
+
+  --font-serif: 'Roca', 'Sorts Mill Goudy', Georgia, serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+
+  --content-max: 1360px;
+}
+
+@font-face {
+  font-family: 'Roca';
+  src: url('/fonts/Roca-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roca';
+  src: url('/fonts/Roca-Light.otf') format('opentype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roca';
+  src: url('/fonts/Roca-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roca';
+  src: url('/fonts/Roca-Black.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roca';
+  src: url('/fonts/Roca-Black.otf') format('opentype');
+  font-weight: 900;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--color-deep-rose);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-charcoal);
+}
+
+img {
+  max-width: 100%;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 42px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-heading);
+}
+
+.rule {
+  display: block;
+  width: 46px;
+  height: 2px;
+  background: var(--color-amber);
+}
+
+.button {
+  display: inline-block;
+  padding: 14px 30px;
+  background: var(--color-deep-rose);
+  color: var(--color-white);
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.button:hover {
+  background: var(--color-deep-rose-hover);
+  color: var(--color-white);
+}
+
+.button--large {
+  padding: 18px 44px;
+  font-size: 17px;
+}
+
+.signupRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.emailInput {
+  flex: 1;
+  min-width: 260px;
+  max-width: 380px;
+  padding: 15px 22px;
+  border: 1px solid #d8b9ab;
+  border-radius: 999px;
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-charcoal);
+}

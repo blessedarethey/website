@@ -1,10 +1,14 @@
 ---
+import '../styles/global.css';
+import { NAV_ITEMS, DONATE_HREF, type NavKey } from '../lib/nav';
+
 interface Props {
   title: string;
   description?: string;
+  active?: NavKey;
 }
 
-const { title, description = 'Blessed Are They' } = Astro.props;
+const { title, description = 'Blessed Are They', active } = Astro.props;
 ---
 
 <!doctype html>
@@ -14,15 +18,50 @@ const { title, description = 'Blessed Are They' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title} | Blessed Are They</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Karla:ital,wght@0,300..700;1,400&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <div class="utility-bar">
+      <span>Catholic Reproductive Health Education</span>
+      <div class="utility-links">
+        <a href="mailto:hello@blessedarethey.com">hello@blessedarethey.com</a>
+        <a href="#">Login</a>
+      </div>
+    </div>
+
     <header class="site-header">
-      <a class="brand" href="/">Blessed Are They</a>
-      <nav>
-        <a href="/about">About</a>
-        <a href="/blog">Blog</a>
-        <a href="/podcast">Podcast</a>
-      </nav>
+      <div class="site-header__inner">
+        <div class="brand">
+          <img class="brand__logo" src="/uploads/BATlogo.jpg" alt="" />
+          <img
+            class="brand__wordmark"
+            src="/uploads/slogan3.jpg"
+            alt="Blessed Are They"
+          />
+        </div>
+
+        <nav class="nav">
+          {
+            NAV_ITEMS.map((item) => (
+              <a
+                href={item.href}
+                class="nav__link"
+                aria-current={active === item.key ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+          <a href={DONATE_HREF} class="nav__donate">
+            Donate
+          </a>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -30,57 +69,243 @@ const { title, description = 'Blessed Are They' } = Astro.props;
     </main>
 
     <footer class="site-footer">
-      <p>&copy; {new Date().getFullYear()} Blessed Are They</p>
+      <div class="site-footer__inner">
+        <img
+          class="site-footer__wordmark"
+          src="/uploads/slogan3.jpg"
+          alt="Blessed Are They"
+        />
+
+        <nav class="site-footer__nav">
+          <a href="/about">About</a>
+          <a href="/curriculum">Curriculum</a>
+          <a href="/events">Events</a>
+          <a href="/podcast">Podcasts</a>
+          <a href="/resources">Resources</a>
+          <a href={DONATE_HREF}>Donate</a>
+          <a href="mailto:hello@blessedarethey.com">Contact</a>
+        </nav>
+
+        <div class="site-footer__socials">
+          <a href="#">Instagram</a>
+          <a href="#">YouTube</a>
+          <a href="#">Facebook</a>
+        </div>
+
+        <div class="site-footer__listen">
+          <p class="site-footer__listen-copy">
+            How to listen: subscribe (it&rsquo;s free) in your favorite
+            podcast app.
+          </p>
+          <div class="site-footer__listen-links">
+            <a href="#">Apple Podcasts</a>
+            <a href="#">Spotify</a>
+            <a href="#">YouTube</a>
+            <a href="#">RSS</a>
+          </div>
+        </div>
+
+        <div class="site-footer__legal">
+          <span>106 Public Square, Suite 115 &middot; Gallatin, TN 37066</span>
+          <span>&copy; 2026 Blessed Are They &middot; 501(c)(3)</span>
+        </div>
+      </div>
     </footer>
 
     <style>
-      :global(body) {
-        margin: 0;
-        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-        color: #1a1a1a;
-        background: #fff;
+      .utility-bar {
+        background: var(--color-charcoal-light);
+        color: var(--color-stone);
+        padding: 9px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .utility-bar a {
+        color: var(--color-stone);
+      }
+
+      .utility-bar a:hover {
+        color: var(--color-white);
+      }
+
+      .utility-links {
+        display: flex;
+        gap: 26px;
+        align-items: center;
       }
 
       .site-header {
+        background: var(--color-cream);
+        border-bottom: 1px solid var(--color-stone);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .site-header__inner {
+        max-width: var(--content-max);
+        margin: 0 auto;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #e5e5e5;
+        gap: 20px 28px;
+        padding: 18px 40px;
       }
 
       .brand {
-        font-weight: 600;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      nav {
         display: flex;
-        gap: 1.25rem;
+        align-items: center;
+        gap: 14px;
       }
 
-      nav a {
-        color: inherit;
-        text-decoration: none;
+      .brand img {
+        display: block;
+        mix-blend-mode: multiply;
       }
 
-      nav a:hover {
-        text-decoration: underline;
+      .brand__logo {
+        height: 50px;
+        width: auto;
       }
 
-      main {
-        max-width: 760px;
-        margin: 0 auto;
-        padding: 2.5rem 1.5rem 4rem;
+      .brand__wordmark {
+        height: 40px;
+        width: auto;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px 18px;
+      }
+
+      .nav__link {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-charcoal);
+      }
+
+      .nav__link:hover,
+      .nav__link[aria-current='page'] {
+        color: var(--color-deep-rose);
+      }
+
+      .nav__donate {
+        display: inline-block;
+        padding: 9px 20px;
+        background: var(--color-deep-rose);
+        color: var(--color-white);
+        border-radius: 999px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .nav__donate:hover {
+        background: var(--color-deep-rose-hover);
+        color: var(--color-white);
       }
 
       .site-footer {
-        border-top: 1px solid #e5e5e5;
-        padding: 1.5rem;
+        background: var(--color-cream);
+        color: var(--color-charcoal);
+        padding: 76px 48px 40px;
+        border-top: 1px solid var(--color-stone);
+      }
+
+      .site-footer__inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
-        color: #666;
-        font-size: 0.875rem;
+        gap: 28px;
+      }
+
+      .site-footer__wordmark {
+        height: 34px;
+        width: auto;
+        display: block;
+        mix-blend-mode: multiply;
+      }
+
+      .site-footer__nav {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: 15px;
+      }
+
+      .site-footer__socials {
+        display: flex;
+        gap: 22px;
+        font-size: 15px;
+      }
+
+      .site-footer__listen {
+        width: 100%;
+        padding-top: 34px;
+        border-top: 1px solid var(--color-stone);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .site-footer__listen-copy {
+        margin: 0;
+        font-size: 15px;
+        opacity: 0.75;
+      }
+
+      .site-footer__listen-links {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .site-footer__listen-links a {
+        padding: 10px 22px;
+        border: 1px solid #d8b9ab;
+        border-radius: 999px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-charcoal);
+      }
+
+      .site-footer__listen-links a:hover {
+        border-color: var(--color-deep-rose);
+      }
+
+      .site-footer__legal {
+        width: 100%;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-stone);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        opacity: 0.65;
+      }
+
+      main {
+        display: block;
       }
     </style>
   </body>
