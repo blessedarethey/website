@@ -1,5 +1,31 @@
 {
-  "extends": "./node_modules/astro/tsconfigs/strict.json",
+  // Inlined from astro/tsconfigs/strict.json + base.json rather than using
+  // "extends" — Vite's built-in TS plugin (vite:oxc) resolves this file's
+  // "extends" relative to whatever file it's currently transforming, not
+  // relative to this tsconfig.json's own directory. That's harmless for
+  // the Astro site itself, but studio/ is a sibling project sharing this
+  // repo's one .git folder, and a request for a file under studio/ ends up
+  // needing THIS tsconfig — at which point any relative "extends" here
+  // resolves from studio/, one directory too deep, and fails with
+  // "Tsconfig not found". Inlining removes the "extends" step entirely so
+  // there's nothing left to resolve incorrectly.
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "strict": true
+  },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist", "studio"]
 }
