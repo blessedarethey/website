@@ -11,10 +11,15 @@ export const sanity = createClient({
   token: import.meta.env.SANITY_API_TOKEN || undefined,
 });
 
-// These query field names assume Sanity document types named "post" and
-// "episode" with the fields referenced below. Create those content types
-// in Sanity Studio (checklist phase 02) to match this shape, or adjust the
-// queries here once the real schema exists.
+// This query field name assumes a Sanity document type named "post" with
+// the fields referenced below. Create that content type in Sanity Studio
+// (checklist phase 02) to match this shape, or adjust the query here once
+// the real schema exists.
+//
+// Podcast episodes are NOT queried from here — they're pulled live from
+// the show's RSS feed instead (see src/lib/podcast.ts). The "episode"
+// Sanity schema still exists in studio/ but is currently unused by the
+// site.
 
 export type BlogPost = {
   _id: string;
@@ -23,15 +28,6 @@ export type BlogPost = {
   publishedAt: string;
   excerpt?: string;
   body?: unknown;
-};
-
-export type PodcastEpisode = {
-  _id: string;
-  title: string;
-  slug: string;
-  publishedAt: string;
-  audioUrl?: string;
-  description?: string;
 };
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
@@ -44,21 +40,6 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   return sanity.fetch(
     `*[_type == "post" && slug.current == $slug][0]{
       _id, title, "slug": slug.current, publishedAt, excerpt, body
-    }`,
-    { slug }
-  );
-}
-
-export async function getEpisodes(): Promise<PodcastEpisode[]> {
-  return sanity.fetch(`*[_type == "episode"] | order(publishedAt desc){
-    _id, title, "slug": slug.current, publishedAt, audioUrl, description
-  }`);
-}
-
-export async function getEpisode(slug: string): Promise<PodcastEpisode | null> {
-  return sanity.fetch(
-    `*[_type == "episode" && slug.current == $slug][0]{
-      _id, title, "slug": slug.current, publishedAt, audioUrl, description
     }`,
     { slug }
   );

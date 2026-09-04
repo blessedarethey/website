@@ -1,19 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisode } from '../../lib/sanity';
+import { getEpisode } from '../../lib/podcast';
 
 const { slug } = Astro.params;
-const episode = slug ? await getEpisode(slug) : null;
+let episode: Awaited<ReturnType<typeof getEpisode>> = null;
+
+try {
+  episode = slug ? await getEpisode(slug) : null;
+} catch {
+  // Feed host down, URL changed, or malformed XML — fall back to the
+  // index page's own error state rather than 500ing here.
+}
 
 if (!episode) {
   return Astro.redirect('/podcast');
 }
 ---
 
-<Layout title={episode.title}>
+<Layout title={episode.title} active="podcast">
   <article>
     <h1>{episode.title}</h1>
-    <p><em>{new Date(episode.publishedAt).toLocaleDateString()}</em></p>
+    {episode.publishedAt && (
+      <p><em>{new Date(episode.publishedAt).toLocaleDateString()}</em></p>
+    )}
     {episode.audioUrl && (
       <audio controls src={episode.audioUrl}>
         Your browser doesn't support embedded audio.

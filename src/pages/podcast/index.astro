@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisodes } from '../../lib/sanity';
+import { getEpisodes } from '../../lib/podcast';
 
 let episodes: Awaited<ReturnType<typeof getEpisodes>> = [];
 let fetchError = false;
@@ -8,6 +8,8 @@ let fetchError = false;
 try {
   episodes = await getEpisodes();
 } catch {
+  // Feed host down, URL changed, or malformed XML — render the page
+  // instead of crashing the build.
   fetchError = true;
 }
 ---
@@ -17,8 +19,8 @@ try {
 
   {fetchError && (
     <p>
-      Couldn't load episodes from Sanity yet — check that the <code>production</code>
-      dataset and an <code>episode</code> document type exist.
+      Couldn't load episodes from the podcast feed right now — try again
+      shortly.
     </p>
   )}
 

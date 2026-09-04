@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/netlify": "^8.2.5",
     "@sanity/client": "^8.5.0",
-    "astro": "7.2.10"
+    "astro": "7.2.10",
+    "fast-xml-parser": "^5.11.1"
   }
 }
