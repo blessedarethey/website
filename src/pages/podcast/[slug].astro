@@ -28,6 +28,6 @@ if (!episode) {
         Your browser doesn't support embedded audio.
       </audio>
     )}
-    {episode.description && <p>{episode.description}</p>}
+    {episode.description && <div set:html={episode.description} />}
   </article>
 </Layout>

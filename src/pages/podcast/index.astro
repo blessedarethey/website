@@ -30,7 +30,7 @@ try {
     {episodes.map((ep) => (
       <li>
         <a href={`/podcast/${ep.slug}`}>{ep.title}</a>
-        {ep.description && <p>{ep.description}</p>}
+        {ep.description && <div set:html={ep.description} />}
       </li>
     ))}
   </ul>
