@@ -1,0 +1,801 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Raw item data, matching Resources.dc.html's component state. "tags"
+// list which life stages an item applies to; an item with no tags is
+// stage-agnostic and shows under every filter. "band" splits the Girls &
+// Women / Boys & Men columns into "Growing Up" vs "The Adult Years"
+// shelves, matching the source's dynamic column-splitting logic — done
+// here at build time since the split itself never changes, only which
+// items are visible within it (that part is the client-side interactive
+// piece, since this project has no UI framework to make it reactive).
+type Item = {
+  meta: string;
+  title: string;
+  desc: string;
+  href?: string;
+  tags: string[] | null;
+  band?: 'Growing Up';
+};
+
+const GIRLS_WOMEN: Item[] = [
+  { band: 'Growing Up', meta: 'Handout · Ours', title: 'Preparing for the First Cycle', desc: 'Hygiene and body care before menarche, so the first cycle arrives expected rather than alarming.', href: '/uploads/BAT_Perimenarche_Hygiene-71e9a39e.pdf', tags: ['Childhood', 'Adolescent'] },
+  { band: 'Growing Up', meta: 'Chart · Ours', title: 'My First Cycle Chart', desc: 'A first chart to keep, with room to record what happens each day and what it means.', href: '/uploads/BAT_First_Cycle_Chart (1).pdf', tags: ['Childhood', 'Adolescent', 'Teen'] },
+  { band: 'Growing Up', meta: 'Chart · Ours', title: 'Monthly Cycle Chart', desc: 'A month at a time, to keep track of the pattern once the first cycles have come and gone.', href: '/uploads/BAT_Monthly_Cycle_Chart.pdf', tags: ['Adolescent', 'Teen'] },
+  { band: 'Growing Up', meta: 'Chart · Ours', title: 'Cycle Charting for Teens', desc: 'Charting the full cycle, what each phase means, and what is worth telling a doctor about.', href: '/uploads/BAT_Cycle_Charting_Teens.pdf', tags: ['Adolescent', 'Teen'] },
+  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Phases of the Menstrual Cycle', desc: 'The four phases for teens — what happens in each one and what it means for how she feels.', href: '/uploads/BAT_Cycle_Awareness_Teens.pdf', tags: ['Adolescent', 'Teen'] },
+  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Hygiene & Body Care', desc: 'Practical care through puberty, framed around dignity rather than embarrassment.', tags: ['Adolescent', 'Teen'] },
+  { meta: 'Guide · Ours', title: 'Fertility Awareness Basics', desc: 'An introduction to fertility awareness–based methods and how to learn one properly.', tags: ['Young Adult'] },
+  { meta: 'Guide · Curated', title: 'Natural Family Planning', desc: 'What the methods are, how they differ, and where to find a trained instructor.', tags: ['Married'] },
+  { meta: 'Guide · Ours', title: 'Perimenopause Supplement Guide', desc: 'What changes, what helps, and what is worth asking your physician — from an OB/GYN.', tags: ['Later Years'] },
+];
+
+const BOYS_MEN: Item[] = [
+  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Growing Up: The Basics', desc: 'Age-appropriate anatomy and what to expect, for a boy and the parent teaching him.', tags: ['Adolescent'] },
+  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Hygiene & Body Care', desc: 'Practical care through puberty, written the way a father would want it said.', tags: ['Teen'] },
+  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Dignity in the Digital Age', desc: 'Safeguarding the dignity of the human person in the digital age.', tags: ['Teen', 'Young Adult'] },
+  { meta: 'Guide · Curated', title: 'Chastity as Strength', desc: 'What the Church actually teaches about self-mastery, and why it is not a restriction.', tags: ['Young Adult'] },
+  { meta: 'Guide · Ours', title: 'Fertility, Together', desc: 'Understanding your wife’s cycle and sharing responsibility for it.', tags: ['Married'] },
+];
+
+const COUPLES: Item[] = [
+  { meta: 'Prayer · USCCB', title: 'NFP Week Prayer Card', desc: 'A printable card for Natural Family Planning Week from the USCCB — for a nightstand, a fridge, or a parish pew.', href: '/uploads/NFP Week Payer Card 3.25x5.25 Print.pdf', tags: ['Engaged', 'Married'] },
+  { meta: 'Guide · Ours', title: 'Before the Wedding', desc: 'What to settle together about children, charting, and intimacy before the day arrives.', tags: ['Engaged'] },
+  { meta: 'Guide · Curated', title: 'Choosing a Method Together', desc: 'How the major methods compare, and how to find an instructor who will teach you both.', tags: ['Engaged', 'Married'] },
+  { meta: 'Chart · Ours', title: 'Charting as Two', desc: 'Reading the chart together, so postponing or pursuing a pregnancy is a shared decision.', tags: ['Married'] },
+  { meta: 'Guide · Ours', title: 'When Conceiving Is Hard', desc: 'Restorative approaches to infertility and loss, and where to find physicians who practice them.', tags: ['Married'] },
+  { meta: 'Guide · Ours', title: 'Postpartum & the Return of Fertility', desc: 'Breastfeeding, irregular cycles, and how to chart in the season with the least sleep.', tags: ['Married'] },
+  { meta: 'Books · Curated', title: 'Reading for Two', desc: 'Theology of the Body for married life — short enough to read aloud in an evening.', tags: ['Married', 'Later Years'] },
+];
+
+const PARENTS: Item[] = [
+  { meta: 'Parent Guide · Ours', title: 'Preparing for the First Cycle', desc: 'The companion to your daughter’s handout — how to have the conversation early, and what to have ready.', href: '/uploads/BAT_Preparing_Her_Parent_Guide.pdf', tags: ['Childhood', 'Adolescent'] },
+  { meta: 'Checklist · Ours', title: 'First Menses Kit', desc: 'What to pack in the bag she keeps in her backpack, so she is never caught without it.', href: '/uploads/BAT_First_Menses_Kit.pdf', tags: ['Childhood', 'Adolescent'] },
+  { meta: 'Guide · Ours', title: 'Conversation Starters', desc: 'Openers and answers for the questions that arrive in the car and at bedtime.', tags: null },
+];
+
+const SHELVES: {
+  key: string;
+  title: string;
+  blurb: string;
+  items: Item[];
+}[] = [
+  { key: 'girls', title: 'For Girls', blurb: 'Before and through puberty', items: GIRLS_WOMEN.filter((i) => i.band === 'Growing Up') },
+  { key: 'women', title: 'For Women', blurb: 'Fertility through the later years', items: GIRLS_WOMEN.filter((i) => i.band !== 'Growing Up') },
+  { key: 'boys', title: 'For Boys', blurb: 'Growing up, and growing into it', items: BOYS_MEN.filter((i) => i.band === 'Growing Up') },
+  { key: 'men', title: 'For Men', blurb: 'Self-mastery, marriage, fatherhood', items: BOYS_MEN.filter((i) => i.band !== 'Growing Up') },
+  { key: 'couples', title: 'For Couples', blurb: 'Preparing for marriage, and living it', items: COUPLES },
+  { key: 'parents', title: 'For Parents', blurb: 'How to say it before they need to hear it', items: PARENTS },
+];
+
+const STAGES = ['All', 'Childhood', 'Adolescent', 'Teen', 'Young Adult', 'Engaged', 'Married', 'Later Years', 'For Couples'];
+
+const RESTS_ON = [
+  { meta: 'Encyclical · 1968', title: 'Humanae Vitae', href: 'https://www.vatican.va/content/paul-vi/en/encyclicals/documents/hf_p-vi_enc_25071968_humanae-vitae.html', desc: 'Paul VI on married love and the transmission of life — the document most often described and least often read.' },
+  { meta: 'Catecheses · 1979–84', title: 'Theology of the Body', href: 'https://www.vatican.va/content/john-paul-ii/en/audiences.index.html', linkLabel: 'Audiences at Vatican.va', desc: 'John Paul II’s Wednesday audiences on the body as a sign of the person. The ground floor of everything here.' },
+  { meta: 'Instruction · 1987', title: 'Donum Vitae', href: 'https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_19870222_respect-for-human-life_en.html', desc: 'On the dignity of human life at its origin, and the questions reproductive technology puts to it.' },
+  { meta: 'Encyclical · 1930', title: 'Casti Connubii', href: 'https://www.vatican.va/content/pius-xi/en/encyclicals/documents/hf_p-xi_enc_19301231_casti-connubii.html', desc: 'Pius XI on Christian marriage — the teaching stated plainly, decades before it became contested.' },
+  { meta: 'Exhortation · 1981', title: 'Familiaris Consortio', href: 'https://www.vatican.va/content/john-paul-ii/en/apost_exhortations/documents/hf_jp-ii_exh_19811122_familiaris-consortio.html', desc: 'John Paul II on the family, and on the parents’ own right and duty to educate their children in this.' },
+];
+---
+
+<Layout
+  title="Resources"
+  description="The Blessed Are They Library — a growing collection of medically accurate, Theology of the Body–rooted resources."
+  active="resources"
+>
+  <section class="hero">
+    <h1 class="heroTitle">Resources</h1>
+  </section>
+
+  <section class="libraryIntro">
+    <div class="libraryIntroInner">
+      <div>
+        <div class="eyebrowRow">
+          <span class="eyebrowRule" />
+          <p class="eyebrowSm">Nothing Under a Bushel Basket</p>
+        </div>
+        <h2 class="libraryHeading">
+          The Blessed Are They <span class="libraryHeadingScript">Library</span>
+        </h2>
+        <p class="libraryLede">
+          A growing collection of what we have made and what we trust.<br />
+          Everything here is medically accurate &amp; rooted in the Theology
+          of the Body.
+        </p>
+        <p class="libraryApproved">
+          <span class="script">blessed</span>{' '}
+          <span class="sans">ARE THEY</span> approved.
+        </p>
+      </div>
+      <div class="basketRow">
+        <svg
+          viewBox="0 0 152 122"
+          width="128"
+          height="103"
+          fill="none"
+          stroke="#3A3A42"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          role="img"
+          aria-label="Bushel basket"
+          class="basketSvg"
+        >
+          <path d="M20 36c0 8 25 15 56 15s56-7 56-15"></path>
+          <path d="M20 36c0-8 25-15 56-15s56 7 56 15"></path>
+          <path d="M28 40c0 6 21 11 48 11s48-5 48-11"></path>
+          <path d="M52 25v18"></path>
+          <path d="M76 22v22"></path>
+          <path d="M100 25v18"></path>
+          <path d="M23 43l10 62c1 6 20 11 43 11s42-5 43-11l10-62"></path>
+          <path d="M27 66c11 5 30 8 49 8s38-3 49-8"></path>
+          <path d="M31 92c10 4 27 7 45 7s35-3 45-7"></path>
+          <path d="M42 53l6 60"></path>
+          <path d="M59 57l3 58"></path>
+          <path d="M93 57l-3 58"></path>
+          <path d="M110 53l-6 60"></path>
+          <path d="M76 58v58"></path>
+          <path d="M23 41 12 33l3-12 8 2"></path>
+          <path d="M129 41l11-8-3-12-8 2"></path>
+        </svg>
+        <p class="quote">
+          &ldquo;Nor do they light a lamp and then put it under a bushel
+          basket; it is set on a lampstand, where it gives light to all in
+          the house.&rdquo;<br />
+          <span class="quoteCite">Matthew 5:15</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="library">
+    <div class="libraryInner">
+      <div class="filterRow" role="group" aria-label="Filter by life stage">
+        <p class="filterLabel">Filter by life stage</p>
+        {STAGES.map((stage, i) => (
+          <button
+            type="button"
+            class="stageBtn"
+            data-stage={stage}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+          >
+            {stage}
+          </button>
+        ))}
+      </div>
+
+      <div class="shelfGrid" id="shelfGrid">
+        {SHELVES.map((shelf) => (
+          <div class="shelf" data-shelf={shelf.key}>
+            <h3 class="shelfTitle">{shelf.title}</h3>
+            <p class="shelfBlurb">{shelf.blurb}</p>
+            {shelf.items.map((item) => (
+              <div
+                class="item"
+                data-tags={item.tags ? item.tags.join(',') : ''}
+              >
+                <div class="itemMetaRow">
+                  <p class="itemStage" data-first-tag={item.tags?.[0] || ''}>
+                    {item.tags ? item.tags[0] : 'All stages'}
+                  </p>
+                  <p class="itemMeta">{item.meta}</p>
+                </div>
+                <h4 class="itemTitle">{item.title}</h4>
+                {item.href && (
+                  <a href={item.href} target="_blank" class="itemLink" rel="noopener">
+                    Download PDF
+                  </a>
+                )}
+                <p class="itemDesc">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="restsOn">
+    <div class="restsOnInner">
+      <div class="restsOnGrid">
+        <div>
+          <h3 class="restsOnTitle">What This Rests On</h3>
+          <p class="restsOnBlurb">
+            We did not invent this teaching. These are the documents it comes
+            from — read them yourself.
+          </p>
+        </div>
+        <div class="docsGrid">
+          {RESTS_ON.map((doc) => (
+            <div class="doc">
+              <p class="docMeta">{doc.meta}</p>
+              <h4 class="docTitle">{doc.title}</h4>
+              <a href={doc.href} target="_blank" rel="noopener" class="itemLink">
+                {doc.linkLabel || 'Read at Vatican.va'}
+              </a>
+              <p class="itemDesc">{doc.desc}</p>
+            </div>
+          ))}
+          <div class="doc">
+            <p class="docMeta">Catechism &middot; 1992</p>
+            <h4 class="docTitle">Catechism of the Catholic Church</h4>
+            <a
+              href="https://www.vatican.va/archive/ENG0015/_INDEX.HTM"
+              target="_blank"
+              rel="noopener"
+              class="itemLink"
+            >
+              Read at Vatican.va
+            </a>
+            <p class="itemDesc catechismDesc">
+              God&rsquo;s plan for love and sexuality, stated directly. Four
+              passages carry most of it:
+            </p>
+            <div class="catechismLinks">
+              <a href="https://www.vatican.va/archive/ENG0015/__P1B.HTM" target="_blank" rel="noopener">355&ndash;421 &middot; Man, male and female, and the Fall</a>
+              <a href="https://www.vatican.va/content/catechism/en/part_two/section_two/chapter_three/article_7.html" target="_blank" rel="noopener">1601&ndash;1666 &middot; The Sacrament of Matrimony</a>
+              <a href="https://www.vatican.va/content/catechism/en/part_three/section_two/chapter_two/article_6.html" target="_blank" rel="noopener">2331&ndash;2400 &middot; The Sixth Commandment</a>
+              <a href="https://www.vatican.va/content/catechism/en/part_three/section_two/chapter_two/article_9.html" target="_blank" rel="noopener">2514&ndash;2533 &middot; The Ninth Commandment</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="educatorBanner">
+    <div class="educatorBannerInner">
+      <p class="educatorBannerBody">
+        Teaching this at home, in a classroom, or in a parish? Lesson plans,
+        discussion guides, and parish materials are kept in the Educator
+        Portal.
+      </p>
+      <a href="/educator-portal" class="outlineButton">Educator Portal</a>
+    </div>
+  </section>
+
+  <section class="filling">
+    <div class="fillingInner">
+      <span class="rule" />
+      <h2 class="fillingHeading">The Shelves Are Filling</h2>
+      <p class="fillingBody">
+        The library grows as we write and as we find work worth passing on.
+        Tell us what you are looking for and we will put it on the list.
+      </p>
+      <a class="button" href="mailto:hello@blessedarethey.com?subject=For%20the%20library">
+        Request a Resource
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Progressive-enhancement filter: everything above renders with all
+  // shelves/items visible (so it's a real page with no JS too) — this
+  // just narrows what's shown. "For Couples" is its own mode: only the
+  // Couples shelf shows, unfiltered, matching the source design's
+  // treatment of it as a shortcut rather than a stage.
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.stageBtn')
+  );
+  const shelves = Array.from(
+    document.querySelectorAll<HTMLElement>('.shelf')
+  );
+  const grid = document.getElementById('shelfGrid');
+
+  function applyFilter(stage: string) {
+    const coupleMode = stage === 'For Couples';
+    let visibleShelves = 0;
+
+    shelves.forEach((shelf) => {
+      const key = shelf.dataset.shelf;
+      if (coupleMode) {
+        const show = key === 'couples';
+        shelf.classList.toggle('shelf--hidden', !show);
+        if (show) {
+          visibleShelves++;
+          shelf.querySelectorAll<HTMLElement>('.item').forEach((item) => {
+            item.classList.remove('item--hidden');
+            const badge = item.querySelector<HTMLElement>('.itemStage');
+            if (badge) badge.textContent = badge.dataset.firstTag || 'All stages';
+          });
+        }
+        return;
+      }
+
+      let visibleItems = 0;
+      shelf.querySelectorAll<HTMLElement>('.item').forEach((item) => {
+        const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+        const visible = stage === 'All' || tags.length === 0 || tags.includes(stage);
+        item.classList.toggle('item--hidden', !visible);
+        if (visible) {
+          visibleItems++;
+          const badge = item.querySelector<HTMLElement>('.itemStage');
+          if (badge) {
+            badge.textContent =
+              tags.length === 0 ? 'All stages' : stage === 'All' ? tags[0] : stage;
+          }
+        }
+      });
+
+      const showShelf = visibleItems > 0;
+      shelf.classList.toggle('shelf--hidden', !showShelf);
+      if (showShelf) visibleShelves++;
+    });
+
+    if (grid) {
+      if (visibleShelves <= 2) {
+        grid.style.gridTemplateColumns = `repeat(${Math.max(visibleShelves, 1)}, minmax(0, 1fr))`;
+        grid.style.maxWidth = '760px';
+      } else {
+        grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(238px, 1fr))';
+        grid.style.maxWidth = 'none';
+      }
+    }
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      applyFilter(btn.dataset.stage || 'All');
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .libraryIntro {
+    padding: 60px 48px 64px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+  }
+
+  .libraryIntroInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 64px;
+  }
+
+  .eyebrowRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .eyebrowRule {
+    display: block;
+    width: 38px;
+    height: 2px;
+    background: var(--color-amber);
+  }
+
+  .eyebrowSm {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-light);
+  }
+
+  .libraryHeading {
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.14;
+    margin: 0 0 22px;
+    color: var(--color-heading);
+  }
+
+  .libraryHeadingScript {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 56px;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+  }
+
+  .libraryLede {
+    font-size: 20px;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+
+  .libraryApproved {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: 0.04em;
+    color: var(--color-heading);
+  }
+
+  .libraryApproved .script {
+    font-family: var(--font-serif);
+  }
+
+  .libraryApproved .sans {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .basketRow {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .basketSvg {
+    display: block;
+    flex: none;
+    opacity: 0.9;
+  }
+
+  .quote {
+    margin: 0;
+    padding-left: 22px;
+    border-left: 2px solid var(--color-amber);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .quoteCite {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .library {
+    padding: 60px 48px 88px;
+    background: var(--color-white);
+  }
+
+  .libraryInner {
+    max-width: 1660px;
+    margin: 0 auto;
+  }
+
+  .filterRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-stone);
+    margin-bottom: 30px;
+  }
+
+  .filterLabel {
+    margin: 0 12px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .stageBtn {
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid var(--color-stone);
+    background: transparent;
+    color: var(--color-heading);
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .stageBtn:hover {
+    border-color: var(--color-deep-rose);
+    color: var(--color-deep-rose);
+  }
+
+  .stageBtn[aria-pressed='true'] {
+    border-color: var(--color-deep-rose);
+    background: var(--color-deep-rose);
+    color: var(--color-white);
+  }
+
+  .shelfGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+    column-gap: 36px;
+    row-gap: 56px;
+    align-items: start;
+    margin: 0 auto;
+  }
+
+  .shelf {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shelf--hidden {
+    display: none;
+  }
+
+  .shelfTitle {
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: var(--color-heading);
+  }
+
+  .shelfBlurb {
+    margin: 0 0 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.7;
+    text-wrap: pretty;
+  }
+
+  .item {
+    padding: 22px 0;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .item--hidden {
+    display: none;
+  }
+
+  .itemMetaRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .itemStage {
+    margin: 0;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-deep-sage);
+  }
+
+  .itemMeta {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+
+  .itemTitle {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    color: var(--color-heading);
+  }
+
+  .itemLink {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-deep-rose);
+  }
+
+  .itemLink:hover {
+    color: var(--color-charcoal);
+  }
+
+  .itemDesc {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.8;
+    text-wrap: pretty;
+  }
+
+  .restsOn {
+    padding: 8px 48px 72px;
+    background: var(--color-white);
+  }
+
+  .restsOnInner {
+    max-width: 1660px;
+    margin: 0 auto;
+    padding-top: 48px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .restsOnGrid {
+    display: grid;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+    column-gap: 64px;
+    row-gap: 28px;
+    align-items: start;
+  }
+
+  .restsOnTitle {
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: var(--color-heading);
+  }
+
+  .restsOnBlurb {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.7;
+    text-wrap: pretty;
+  }
+
+  .docsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    column-gap: 36px;
+    row-gap: 4px;
+  }
+
+  .doc {
+    padding: 20px 0;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .docMeta {
+    margin: 0 0 6px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-deep-sage);
+  }
+
+  .docTitle {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    color: var(--color-heading);
+  }
+
+  .catechismDesc {
+    margin: 0 0 10px;
+  }
+
+  .catechismLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .catechismLinks a {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--color-deep-rose);
+  }
+
+  .catechismLinks a:hover {
+    color: var(--color-charcoal);
+  }
+
+  .educatorBanner {
+    padding: 0 48px 76px;
+    background: var(--color-white);
+  }
+
+  .educatorBannerInner {
+    max-width: 1660px;
+    margin: 0 auto;
+    padding: 26px 30px;
+    border: 1px solid var(--color-stone);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .educatorBannerBody {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.85;
+    max-width: 640px;
+    text-wrap: pretty;
+  }
+
+  .outlineButton {
+    flex: none;
+    display: inline-block;
+    padding: 12px 26px;
+    border: 1px solid var(--color-deep-rose);
+    border-radius: 999px;
+    color: var(--color-deep-rose);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .outlineButton:hover {
+    background: var(--color-deep-rose);
+    color: var(--color-white);
+  }
+
+  .filling {
+    padding: 52px 48px 60px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .fillingInner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .fillingHeading {
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--color-heading);
+  }
+
+  .fillingBody {
+    font-size: 18px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin: 0;
+    max-width: 580px;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .libraryIntroInner {
+      grid-template-columns: 1fr;
+    }
+
+    .restsOnGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
