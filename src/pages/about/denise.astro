@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FounderProfile from '../../components/FounderProfile.astro';
+---
+
+<Layout
+  title="Denise Montagnino, DO, MPH"
+  description="Denise Montagnino, DO, MPH — Obstetrician/Gynecologist, co-founder of Blessed Are They."
+  active="about"
+>
+  <FounderProfile
+    name="Denise Montagnino, DO, MPH"
+    role="Obstetrician/Gynecologist · Co-founder"
+    photo="/uploads/Denise.jpg"
+    objectPosition="50% 20%"
+    bioHtml={[
+      'A board-certified OB/GYN, wife, and mother of six. Since completing residency in 2011 and entering practice in 2015, she has cared for women through every stage of reproductive life — adolescence, fertility, pregnancy, delivery, and beyond.',
+      'In the exam room and outside of it, she kept meeting the same gap: no one had taught these women the truth about their own bodies, or what that truth was for. That gap is why Blessed Are They exists. No program taught the body as both medically accurate and authentically Catholic — not clinical facts to memorize, but a gift with meaning and purpose.',
+      'Her own path informs the mission as much as her practice does. She did not always understand the fullness of what the Church teaches about the human person, and for years her clinical work did not reflect it. Coming to understand it — and seeing how few Catholic families ever get that chance — convinced her this work could not wait for someone else.',
+    ]}
+    focusHtml="<b><i>Her focus in Program Development:</i></b><br />Medical content, and making it developmentally appropriate — so every lesson is clinically sound and lands at the age it is taught."
+  />
+</Layout>

@@ -1,0 +1,148 @@
+---
+// Shared layout for each founder's individual bio page — Denise, Tuzdy,
+// and Kirsten's pages (Denise Montagnino.dc.html, Tuzdy Currlin.dc.html,
+// Kirsten King.dc.html) are all this exact same structure, differing only
+// in content, so this is one component rather than three copies of the
+// same markup.
+interface Props {
+  name: string;
+  role: string;
+  photo: string;
+  objectPosition: string;
+  /** Paragraph inner-HTML strings (bold/italic preserved from the source
+   *  copy) — rendered via set:html, one <p> per entry. */
+  bioHtml: string[];
+  /** Inner HTML for the closing "Her focus in Program Development" line. */
+  focusHtml: string;
+}
+
+const { name, role, photo, objectPosition, bioHtml, focusHtml } = Astro.props;
+---
+
+<section class="hero">
+  <h1 class="heroTitle">Founder</h1>
+</section>
+
+<section class="profile">
+  <div class="profileInner">
+    <div class="photoWrap">
+      <img src={photo} alt={name} style={{ objectPosition }} />
+    </div>
+    <div class="content">
+      <h2 class="name">{name}</h2>
+      <p class="role">{role}</p>
+      <span class="rule" />
+      <div class="bio">
+        {bioHtml.map((html) => <p set:html={html} />)}
+        <p class="focus" set:html={focusHtml} />
+      </div>
+      <p class="back">
+        <a href="/about#founders">&larr; Back to the founders</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-stone);
+  }
+
+  .profile {
+    padding: 56px 48px 72px;
+  }
+
+  .profileInner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 64px;
+    align-items: start;
+  }
+
+  .photoWrap {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 220px 220px 14px 14px;
+    border: 1px solid var(--color-stone);
+    overflow: hidden;
+    background: var(--color-cream);
+  }
+
+  .photoWrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .name {
+    font-family: 'Sorts Mill Goudy', Georgia, serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.14;
+    margin: 0 0 10px;
+    text-wrap: pretty;
+  }
+
+  .role {
+    margin: 0 0 20px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-deep-rose);
+  }
+
+  .rule {
+    margin-bottom: 28px;
+  }
+
+  .bio {
+    font-size: 18px;
+    line-height: 1.72;
+    opacity: 0.88;
+    text-wrap: pretty;
+  }
+
+  .bio p {
+    margin: 0 0 16px;
+  }
+
+  .bio p.focus {
+    margin: 0;
+  }
+
+  .back {
+    margin: 40px 0 0;
+    padding-top: 28px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .back a {
+    font-size: 16px;
+  }
+
+  @media (max-width: 800px) {
+    .profileInner {
+      grid-template-columns: 1fr;
+    }
+
+    .photoWrap {
+      max-width: 360px;
+      margin: 0 auto;
+    }
+  }
+</style>
