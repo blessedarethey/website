@@ -1,0 +1,251 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// None of these have a real product photo yet (checked the design
+// handoff's image-slot state — all seven are empty), so each card shows
+// a plain placeholder box labeled with what photo belongs there, same as
+// the design tool's own placeholder hint.
+const PRODUCTS = [
+  { photo: 'Tee photo', title: 'Logo Tee', body: 'Soft cotton tee with the Blessed Are They mark on the chest.' },
+  { photo: 'Sweatshirt photo', title: 'Crewneck', body: 'Heavyweight crewneck sweatshirt in charcoal, embroidered mark.' },
+  { photo: 'Tote photo', title: 'Canvas Tote', body: 'Natural canvas tote, big enough for a study guide and everything else.' },
+  { photo: 'Mug photo', title: 'Kitchen Table Mug', body: 'Stoneware mug for the conversations that happen over coffee.' },
+  { photo: 'Sticker photo', title: 'Sticker Set', body: 'The mark and the flower stages, weatherproof, for water bottles and laptops.' },
+  { photo: 'Hat photo', title: 'Embroidered Hat', body: 'Structured cap with the flower mark stitched on the front panel.' },
+];
+---
+
+<Layout
+  title="Merch"
+  description="Blessed Are They merchandise — wear it, carry it, share it. Every purchase funds Phase I."
+  active="merch"
+>
+  <section class="hero">
+    <h1 class="heroTitle">Merch</h1>
+  </section>
+
+  <section class="intro">
+    <div class="introInner">
+      <h2 class="introHeading">Wear It, Carry It, Share It</h2>
+      <div class="tagRow">
+        <span class="tagRule" />
+        <p class="tag">Every Purchase Funds Phase I</p>
+        <span class="tagRule" />
+      </div>
+      <p class="introBody">Blessed Are They merchandise, designed around our own mark.</p>
+    </div>
+  </section>
+
+  <section class="products">
+    <div class="productsInner">
+      {PRODUCTS.map((p) => (
+        <div class="productCard">
+          <div class="productPhoto">
+            <span class="productPhotoLabel">{p.photo}</span>
+          </div>
+          <h3 class="productTitle">{p.title}</h3>
+          <p class="productBody">{p.body}</p>
+          <span class="comingSoon">Coming soon</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="notify">
+    <div class="notifyInner">
+      <span class="rule" />
+      <h2 class="notifyHeading">The Shop Opens Soon</h2>
+      <p class="notifyBody">
+        Tell us what you would wear and we will let you know the moment
+        the store is live.
+      </p>
+      <a class="button" href="mailto:hello@blessedarethey.com?subject=Merch">
+        Notify Me
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .intro {
+    padding: 48px 48px 52px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+  }
+
+  .introInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .introHeading {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    margin: 0 0 26px;
+    color: var(--color-heading);
+  }
+
+  .tagRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .tagRule {
+    display: block;
+    width: 42px;
+    height: 2px;
+    background: var(--color-amber);
+  }
+
+  .tag {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-light);
+  }
+
+  .introBody {
+    font-size: 21px;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin: 0 auto;
+    max-width: 720px;
+    text-wrap: pretty;
+  }
+
+  .products {
+    padding: 64px 48px 68px;
+    background: var(--color-white);
+  }
+
+  .productsInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 34px;
+  }
+
+  .productCard {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .productPhoto {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-cream);
+    border: 1px solid var(--color-stone);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .productPhotoLabel {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  .productTitle {
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: var(--color-heading);
+  }
+
+  .productBody {
+    font-size: 16px;
+    line-height: 1.65;
+    opacity: 0.8;
+    margin: 0 0 16px;
+    text-wrap: pretty;
+  }
+
+  .comingSoon {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 6px 14px;
+    background: var(--color-stone);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .notify {
+    padding: 56px 48px 64px;
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .notifyInner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .notifyHeading {
+    font-size: 34px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-heading);
+  }
+
+  .notifyBody {
+    font-size: 18px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin: 0;
+    max-width: 620px;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .productsInner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .productsInner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
