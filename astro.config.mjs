@@ -6,7 +6,14 @@ import netlify from '@astrojs/netlify';
 // run on each request, not just at build time.
 export default defineConfig({
   output: 'server',
-  adapter: netlify(),
+  adapter: netlify({
+    // Local-dev-only emulation features. edgeFunctions is off because this
+    // project has no netlify/edge-functions directory — the adapter still
+    // tries to spawn a local Deno server for it by default, and on a
+    // machine without a compatible Deno install that hangs `astro dev`
+    // with an unhandled rejection before any page can render.
+    devFeatures: { edgeFunctions: false },
+  }),
   site: 'https://blessedarethey.org', // TODO: replace with the real domain once purchased/confirmed
   // The Netlify adapter auto-enables session storage via Netlify Blobs unless
   // told otherwise, which pushed the account toward a paid plan before we
