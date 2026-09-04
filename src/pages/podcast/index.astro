@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getEpisodes, excerpt } from '../../lib/podcast';
 
 const FEED_URL = 'https://anchor.fm/s/116517680/podcast/rss';
 
@@ -10,28 +11,30 @@ const MIC_PATHS = [
   'M22 55h20',
 ];
 
-const FIRST_SERIES = [
-  {
-    n: 'Episode 1',
-    title: 'Who We Are',
-    body: 'An introduction to ourselves, to our hearts, and to the heart behind the mission of BAT.',
-  },
-  {
-    n: 'Episode 2',
-    title: 'The Good',
-    body: 'What it means to be made good — on purpose — and why that is where every conversation about the body has to start.',
-  },
-  {
-    n: 'Episode 3',
-    title: 'The True',
-    body: 'Naming the body accurately, and why the truth about how we are made was never meant to stop at biology.',
-  },
-  {
-    n: 'Episode 4',
-    title: 'The Beautiful',
-    body: 'Why a life lived in the light of all this is not something to hide or apologize for, but something to live out loud.',
-  },
-];
+// "The First Series" shows the actual first four published episodes,
+// oldest first, linked to their real (playable) episode pages — the
+// real episodes match this planned arc closely enough that keeping a
+// separate hand-written version alongside them would just drift out of
+// sync. getEpisodes() returns newest-first; reverse for chronological
+// order here. "The Second Series" below stays hand-written since none
+// of those episodes exist yet.
+let firstSeries: { n: string; title: string; body: string; href: string }[] =
+  [];
+try {
+  const episodes = await getEpisodes();
+  firstSeries = [...episodes]
+    .reverse()
+    .slice(0, 4)
+    .map((ep, i) => ({
+      n: `Episode ${i + 1}`,
+      title: ep.title,
+      body: ep.description ? excerpt(ep.description) : '',
+      href: `/podcast/${ep.slug}`,
+    }));
+} catch {
+  // Feed unreachable — fall back to the empty-state message below rather
+  // than crashing the page.
+}
 
 const SECOND_SERIES = [
   {
@@ -171,20 +174,26 @@ const HOSTS = [
         {MIC_PATHS.map((d) => <path d={d} />)}
       </svg>
       <h3 class="seriesTitle">The Foundation</h3>
-      <div class="episodeGrid">
-        {FIRST_SERIES.map((ep) => (
-          <div class="episodeRow">
-            <p class="episodeNum">{ep.n}</p>
-            <div>
-              <p class="episodeTitle">{ep.title}</p>
-              <p class="episodeBody">{ep.body}</p>
+      {firstSeries.length > 0 ? (
+        <div class="episodeGrid">
+          {firstSeries.map((ep) => (
+            <div class="episodeRow">
+              <p class="episodeNum">{ep.n}</p>
+              <div>
+                <p class="episodeTitle">
+                  <a href={ep.href}>{ep.title}</a>
+                </p>
+                {ep.body && <p class="episodeBody">{ep.body}</p>}
+              </div>
             </div>
-          </div>
-        ))}
-        <p class="seriesClose">
-          Start here and you will know what we are building.
-        </p>
-      </div>
+          ))}
+          <p class="seriesClose">
+            Start here and you will know what we are building.
+          </p>
+        </div>
+      ) : (
+        <p class="episodeEmpty">Recording now — check back soon.</p>
+      )}
     </div>
   </section>
 
@@ -447,7 +456,14 @@ const HOSTS = [
     font-weight: 700;
     font-size: 19px;
     line-height: 1.3;
+  }
+
+  .episodeTitle a {
     color: var(--color-charcoal-light);
+  }
+
+  .episodeTitle a:hover {
+    color: var(--color-deep-rose);
   }
 
   .episodeBody {
@@ -456,6 +472,12 @@ const HOSTS = [
     line-height: 1.55;
     opacity: 0.85;
     text-wrap: pretty;
+  }
+
+  .episodeEmpty {
+    margin: 0;
+    font-size: 17px;
+    opacity: 0.75;
   }
 
   .seriesClose {

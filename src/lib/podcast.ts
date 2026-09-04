@@ -25,7 +25,28 @@ export type Episode = {
   /** Seconds, if the feed's <itunes:duration> could be parsed. */
   durationSeconds?: number;
   imageUrl?: string;
+  /** From <itunes:episode>, if the host sets it — not every feed does. */
+  episodeNumber?: number;
 };
+
+// Strips tags and collapses whitespace from a feed description (which is
+// HTML — see set:html usage on the episode pages) down to a plain-text
+// excerpt for contexts too tight for the full show notes, like a listing
+// row. Cuts at the last whole word inside the limit rather than mid-word.
+export function excerpt(html: string, maxChars = 140): string {
+  const text = html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (text.length <= maxChars) return text;
+  const cut = text.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${cut.slice(0, lastSpace > 0 ? lastSpace : maxChars)}…`;
+}
 
 function slugify(title: string, guid: string): string {
   const base = title
@@ -63,6 +84,7 @@ function toEpisode(item: any): Episode | null {
   const audioUrl = enclosure?.['@_url'];
 
   const itunesImage = item?.['itunes:image']?.['@_href'];
+  const episodeNumber = Number(item?.['itunes:episode']);
 
   return {
     guid: String(guid),
@@ -74,6 +96,7 @@ function toEpisode(item: any): Episode | null {
     audioUrl: audioUrl ? String(audioUrl) : undefined,
     durationSeconds: parseDuration(item?.['itunes:duration']),
     imageUrl: itunesImage ? String(itunesImage) : undefined,
+    episodeNumber: Number.isFinite(episodeNumber) ? episodeNumber : undefined,
   };
 }
 
