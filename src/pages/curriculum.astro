@@ -1,0 +1,521 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const AUDIENCES = [
+  {
+    icon: 'school',
+    title: 'For Schools',
+    body: 'A three-part instructional series at each grade level, from upper elementary through the completion of high school. No prior expertise required of the teacher: each level is comprehensive, with a facilitator guide and in-class reflection questions that pair sound biology with authentic Catholic teaching.',
+    quote:
+      'It is the special function of the Catholic school to create an atmosphere enlivened by the Gospel spirit of freedom and charity.',
+    cite: 'Second Vatican Council, <i>Gravissimum Educationis</i>, 8',
+  },
+  {
+    icon: 'parish',
+    title: 'For Parishes',
+    body: 'Bring the curriculum in as a standalone program or fold it into your existing faith formation and religious education events — ideal for children attending public or non-Catholic schools. Plus live events at each grade level, beginning with our mother-daughter and father-son evenings, hosted in your hall.',
+    quote: 'The parish remains, as I have said, the pre-eminent place for catechesis.',
+    cite: 'St. John Paul II, <i>Catechesi Tradendae</i>, 67',
+  },
+  {
+    icon: 'family',
+    title: 'For Families & Homeschool',
+    body: 'Suitable for administration at home, whether you homeschool or want to reinforce what is being covered in class. Every level comes with a parent guide, discussion questions, and videos meant to be watched together, giving parents the language to speak with their child about the body and the faith.',
+    quote: 'Parents must be acknowledged as the first and foremost educators of their children.',
+    cite: 'Second Vatican Council, <i>Gravissimum Educationis</i>, 3',
+  },
+];
+
+const INCLUDED = [
+  'A three-part video series at every grade level',
+  'A facilitator guide for every series',
+  'Discussion questions for the classroom and the home',
+  'FAQ for families',
+];
+
+const GRADE_LEVELS = [
+  {
+    grade: 'Grades 4–5',
+    title: 'Upper Elementary',
+    body: 'External and internal reproductive anatomy, puberty and body awareness, hygiene, healthy relationships, and the dignity of the human person.',
+    stemHeight: 32,
+    paths: [
+      'M62,140 C48,142 38,136 34,127 C46,125 57,131 62,140 Z',
+      'M62,130 C76,132 86,126 90,117 C78,115 67,121 62,130 Z',
+    ],
+  },
+  {
+    grade: 'Grades 6–8',
+    title: 'Middle School',
+    body: 'Menstrual cycle awareness, male and female anatomy, friendship and healthy relationships, personal boundaries, and an introduction to chastity.',
+    stemHeight: 56,
+    paths: [
+      'M62,142 C46,144 34,138 30,128 C44,126 56,132 62,142 Z',
+      'M62,134 C78,136 90,130 94,120 C80,118 68,124 62,134 Z',
+      'M62,66 C74,76 76,92 62,102 C48,92 50,76 62,66 Z',
+    ],
+  },
+  {
+    grade: 'Grades 9–10',
+    title: 'Early High School',
+    body: 'A review of male and female anatomy and how it functions, human reproduction and conception, the basics of pregnancy and birth, and the dignity of life from the moment of conception. Includes an introduction to safeguarding dignity in the digital age.',
+    stemHeight: 52,
+    paths: [
+      'M62,142 C46,144 34,138 30,128 C44,126 56,132 62,142 Z',
+      'M62,134 C78,136 90,130 94,120 C80,118 68,124 62,134 Z',
+      'M62,68 C71,78 72,92 62,101 C52,92 53,78 62,68 Z',
+      'M62,101 C46,96 38,82 42,68 C52,74 60,88 62,101 Z',
+      'M62,101 C78,96 86,82 82,68 C72,74 64,88 62,101 Z',
+    ],
+  },
+  {
+    grade: 'Grades 11–12',
+    title: 'Upper High School',
+    body: 'Functional anatomy and fertility awareness, Church teaching on contraception and sterilization, and applied bioethics. Marriage as a vocation, living in the world through a Catholic lens, and adult self-care.',
+    stemHeight: 48,
+    paths: [
+      'M62,126 C46,128 34,122 30,112 C44,110 56,116 62,126 Z',
+      'M62,118 C78,120 90,114 94,104 C80,102 68,108 62,118 Z',
+      'M62,58 C74,70 76,90 62,102 C48,90 50,70 62,58 Z',
+      'M62,102 C40,96 30,78 34,58 C48,66 59,84 62,102 Z',
+      'M62,102 C84,96 94,78 90,58 C76,66 65,84 62,102 Z',
+    ],
+  },
+];
+---
+
+<Layout
+  title="Curriculum"
+  description="The Blessed Are They curriculum — for schools, parishes, and families, from upper elementary through adulthood."
+  active="curriculum"
+>
+  <section class="hero">
+    <h1 class="heroTitle">Curriculum</h1>
+  </section>
+
+  <section class="inDev">
+    <div class="inDevInner">
+      <span class="rule" />
+      <p class="eyebrow">In development</p>
+      <div class="tagRow">
+        <span class="tagRule" />
+        <p class="tag">Home &middot; School &middot; Parish</p>
+        <span class="tagRule" />
+      </div>
+      <p class="inDevBody">
+        The curriculum is being written now. Everything below is a preview
+        of what is planned. <br />The program will be video-based, and built
+        on developmentally appropriate interactive conversations from upper
+        elementary through adulthood. It will be designed for all three
+        settings, so each one teaches the same thing at the same time.
+      </p>
+    </div>
+  </section>
+
+  <section class="audiences">
+    <div class="audiencesInner">
+      {AUDIENCES.map((a) => (
+        <div class="audienceCard">
+          {a.icon === 'school' && (
+            <svg
+              viewBox="0 0 64 64"
+              width="56"
+              height="56"
+              fill="none"
+              stroke="#3A3A42"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="audienceIcon"
+              role="img"
+              aria-label="School"
+            >
+              <path d="M32 20v30"></path>
+              <path d="M32 20c-5-4-12-6-20-6v30c8 0 15 2 20 6"></path>
+              <path d="M32 20c5-4 12-6 20-6v30c-8 0-15 2-20 6"></path>
+              <path d="M32 14V8"></path>
+              <path d="M29 10.5h6"></path>
+            </svg>
+          )}
+          {a.icon === 'parish' && (
+            <svg
+              viewBox="0 0 64 64"
+              width="56"
+              height="56"
+              fill="none"
+              stroke="#3A3A42"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="audienceIcon"
+              role="img"
+              aria-label="Parish"
+            >
+              <path d="M22 4v5"></path>
+              <path d="M19 6.5h6"></path>
+              <path d="M22 10 13 22v34h18V22Z"></path>
+              <path d="M31 34 45 24l10 7v25H31"></path>
+              <path d="M18 30a4 4 0 0 1 8 0v6h-8Z"></path>
+              <path d="M38 56V44a5 5 0 0 1 10 0v12"></path>
+            </svg>
+          )}
+          {a.icon === 'family' && (
+            <svg
+              viewBox="0 0 64 64"
+              width="56"
+              height="56"
+              fill="none"
+              stroke="#3A3A42"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="audienceIcon"
+              role="img"
+              aria-label="Family"
+            >
+              <path d="M8 30a24 24 0 0 1 48 0"></path>
+              <circle cx="20" cy="40" r="5"></circle>
+              <path d="M12 57v-4a8 8 0 0 1 16 0v4"></path>
+              <circle cx="44" cy="40" r="5"></circle>
+              <path d="M36 57v-4a8 8 0 0 1 16 0v4"></path>
+              <circle cx="32" cy="47" r="3.6"></circle>
+              <path d="M27 57v-2.4a5 5 0 0 1 10 0V57"></path>
+            </svg>
+          )}
+          <h3 class="audienceTitle">{a.title}</h3>
+          <p class="audienceBody">{a.body}</p>
+          <blockquote class="audienceQuote">
+            <p class="quoteText">&ldquo;{a.quote}&rdquo;</p>
+            <cite class="quoteCite" set:html={`&mdash; ${a.cite}`} />
+          </blockquote>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="courses">
+    <div class="coursesInner">
+      <div class="coursesIntro">
+        <h2 class="coursesHeading">Courses &amp; Series</h2>
+        <p class="coursesLede">
+          Age-appropriate at every level, aligned with Catholic Church
+          teaching, and incorporating Theology of the Body.
+        </p>
+        <p class="includedLabel">What will be included:</p>
+        <ul class="includedList">
+          {INCLUDED.map((item) => (
+            <li>
+              <span class="bullet">&bull;</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="gradeGrid">
+        {GRADE_LEVELS.map((g) => (
+          <a href="#" class="gradeCard">
+            <div class="gradeIconWrap">
+              <svg
+                viewBox="0 46 124 112"
+                width="64"
+                height="58"
+                fill="none"
+                stroke="#3A3A42"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-label={`${g.title} flower stage`}
+                role="img"
+                class="gradeIcon"
+              >
+                <path d="M2,152 L122,152" stroke-width="4"></path>
+                <path
+                  d={`M62,152 L62,${152 - g.stemHeight}`}
+                  stroke-width="7"
+                ></path>
+                {g.paths.map((d) => (
+                  <path d={d} stroke-width="3.4" />
+                ))}
+              </svg>
+            </div>
+            <p class="gradeLabel">{g.grade.toUpperCase()}</p>
+            <h3 class="gradeTitle">{g.title}</h3>
+            <p class="gradeBody">{g.body}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroTitle {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  .inDev {
+    padding: 44px 48px 48px;
+    background: var(--color-stone);
+    border-bottom: 1px solid #d8b9ab;
+  }
+
+  .inDevInner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .tagRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .tagRule {
+    display: block;
+    width: 42px;
+    height: 2px;
+    background: var(--color-amber);
+  }
+
+  .tag {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-light);
+  }
+
+  .inDevBody {
+    font-size: 18px;
+    line-height: 1.65;
+    opacity: 0.85;
+    margin: 0;
+    max-width: 1040px;
+    text-wrap: pretty;
+  }
+
+  .audiences {
+    padding: 88px 48px 96px;
+    background: var(--color-white);
+  }
+
+  .audiencesInner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    align-items: stretch;
+  }
+
+  .audienceCard {
+    background: var(--color-cream);
+    border: 1px solid var(--color-stone);
+    border-radius: 16px;
+    padding: 28px 28px 26px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .audienceIcon {
+    display: block;
+    margin: 0 0 18px;
+  }
+
+  .audienceTitle {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 23px;
+    color: var(--color-heading);
+    margin: 0 0 10px;
+  }
+
+  .audienceBody {
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin: 0 0 18px;
+    text-wrap: pretty;
+    flex: 1;
+  }
+
+  .audienceQuote {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  .quoteText {
+    font-family: 'Sorts Mill Goudy', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 0 0 8px;
+    text-wrap: pretty;
+  }
+
+  .quoteCite {
+    font-style: normal;
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    opacity: 0.68;
+  }
+
+  .courses {
+    padding: 92px 48px 104px;
+    background: var(--color-cream);
+  }
+
+  .coursesInner {
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+
+  .coursesIntro {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .coursesHeading {
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.14;
+    margin: 0 0 16px;
+    color: var(--color-heading);
+  }
+
+  .coursesLede {
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.78;
+    margin: 0 auto;
+    text-wrap: pretty;
+  }
+
+  .includedLabel {
+    margin: 30px 0 0;
+    font-size: 20px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-heading);
+  }
+
+  .includedList {
+    list-style: none;
+    margin: 16px auto 0;
+    padding: 30px 40px;
+    max-width: 720px;
+    background: #fbf6ee;
+    border: 1px solid #f0e6da;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .includedList li {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 10px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-heading);
+  }
+
+  .bullet {
+    color: var(--color-deep-rose);
+  }
+
+  .gradeGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .gradeCard {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-charcoal);
+  }
+
+  .gradeIconWrap {
+    position: relative;
+    height: 64px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gradeIcon {
+    display: block;
+    flex: none;
+  }
+
+  .gradeLabel {
+    margin: 0 0 8px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--color-heading);
+    text-align: center;
+  }
+
+  .gradeTitle {
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    color: var(--color-heading);
+    text-align: center;
+  }
+
+  .gradeBody {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.78;
+    margin: 0;
+    text-align: center;
+  }
+
+  @media (max-width: 1000px) {
+    .audiencesInner {
+      grid-template-columns: 1fr;
+    }
+
+    .gradeGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .gradeGrid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
