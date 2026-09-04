@@ -12,5 +12,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./schemaTypes/**/*", "./sanity.config.ts", "./sanity.cli.ts"]
+  "include": ["**/*"],
+  "exclude": ["node_modules", "dist"]
 }
