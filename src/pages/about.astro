@@ -1,8 +1,520 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const FOUNDERS = [
+  {
+    name: 'Denise Montagnino, DO, MPH',
+    role: 'Obstetrician/Gynecologist · Co-founder',
+    photo: '/uploads/Denise.jpg',
+    objectPosition: '50% 20%',
+    bio: 'A board-certified OB/GYN, wife, and mother of six. Since completing residency in 2011 and entering practice in 2015, she has cared for women through every stage of reproductive life — adolescence, fertility, pregnancy, delivery, and beyond.',
+    href: '/about/denise',
+  },
+  {
+    name: 'Tuzdy Currlin, MD',
+    role: 'Pediatrician · Co-founder',
+    photo: '/uploads/Tuzdy Currlin, MD.JPG',
+    objectPosition: '47% 22%',
+    bio: 'A pediatrician with 10 years of clinical experience, wife, and mother of four. Dr. Tuzdy Currlin brings a deep respect for children, families, and the extraordinary work of growing up.',
+    href: '/about/tuzdy',
+  },
+  {
+    name: 'Kirsten King, MSW',
+    role: 'FUNDRAISING & COMMUNICATIONS DIRECTOR\nCO-FOUNDER',
+    photo: '/uploads/ChatGPT Image Aug 24, 2026, 05_54_31 PM.png',
+    objectPosition: '50% 25%',
+    bio: 'She is a wife, mother of four, a creative that knows no bounds, and a fearless follower of the Holy Spirit who believes that some of the best work God does begins with a simple, “Yes, Lord. I\'m in.”',
+    href: '/about/kirsten',
+  },
+];
+
+const BELIEFS = [
+  {
+    label: 'the good',
+    body: 'Every person is created by God, known and loved from the beginning, and made for a purpose no achievement can supply. The good life is not something earned through striving but received through knowing Him. We teach the body as a gift, never a problem to manage, so a child learns their own worth before the culture tries to assign it to them.',
+  },
+  {
+    label: 'the true',
+    body: 'Science and faith were never meant to be separate conversations. We name the body accurately — the anatomy, the cycles, the plain facts — and we do not stop there, because the truth about how we are made points to why we are made. Leave no room for confusion. Everyone deserves more than just the half of it.',
+  },
+  {
+    label: 'the beautiful',
+    body: 'Beauty is what the Good and the True look like when they are actually lived. Every person is called to a vocation — marriage, religious life, single life in service — and none of it is a consolation prize. When a person understands their body as a gift and knows the truth of how they are made, they are free to answer that call fully alive: not quietly, not apologetically, but with their whole self given away.',
+  },
+];
 ---
 
-<Layout title="About" description="About Blessed Are They" active="about">
-  <h1>About</h1>
-  <p>Placeholder — replace with BAT's actual mission and story.</p>
+<Layout
+  title="About"
+  description="About Blessed Are They — the founders, what grounds us, and the gap we're closing."
+  active="about"
+>
+  <section class="hero">
+    <div class="heroInner">
+      <h1 class="heroTitle">About</h1>
+      <img class="heroWordmark" src="/uploads/slogan1-cream.png" alt="blessed are they" />
+    </div>
+  </section>
+
+  <section id="founders" class="foundersIntro">
+    <div class="foundersIntroInner">
+      <p class="eyebrow">The founders</p>
+      <h2 class="foundersHeading">The faces behind this mission</h2>
+      <p class="foundersLede">
+        <i>Blessed Are They</i> is being launched on prayers by three moms and
+        professionals who could not find the content they were looking for,
+        <b><i>so they are setting out to build it.</i></b>
+      </p>
+    </div>
+  </section>
+
+  <section class="foundersGrid">
+    <div class="foundersGridInner">
+      {FOUNDERS.map((f) => (
+        <div class="founderCard">
+          <div class="founderPhoto">
+            <img src={f.photo} alt={f.name} style={{ objectPosition: f.objectPosition }} />
+          </div>
+          <h3 class="founderName">{f.name}</h3>
+          <p class="founderRole" set:html={f.role.replace('\n', '<br />')} />
+          <span class="rule" />
+          <div class="founderBio">
+            <p>{f.bio}</p>
+          </div>
+          <p class="founderReadMore">
+            <a href={f.href}>Read more &rarr;</a>
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="grounds">
+    <div class="groundsInner">
+      <div class="groundsIcon">
+        <p class="eyebrow eyebrow--md">What grounds us</p>
+        <svg
+          viewBox="0 0 200 260"
+          preserveAspectRatio="xMidYMid meet"
+          width="200"
+          height="260"
+          class="plant"
+          role="img"
+          aria-label="Plant with roots below ground"
+        >
+          <g stroke="#3A3A42" fill="none" stroke-linecap="round">
+            <path d="M6,118 L194,118" stroke-width="5"></path>
+            <path d="M100,118 L100,34" stroke-width="6"></path>
+            <path
+              d="M100,88 C84,86 74,74 73,60 C89,63 98,73 100,88 Z"
+              stroke-width="4.5"
+              stroke-linejoin="round"></path>
+            <path
+              d="M100,99 C112,97 119,88 120,78 C109,80 102,88 100,99 Z"
+              stroke-width="4"
+              stroke-linejoin="round"></path>
+            <path
+              d="M100,110 C88,108 80,100 79,89 C90,92 98,99 100,110 Z"
+              stroke-width="4"
+              stroke-linejoin="round"></path>
+            <path
+              d="M100,34 C110,42 110,56 100,62 C90,56 90,42 100,34 Z"
+              stroke-width="5"
+              stroke-linejoin="round"></path>
+            <path d="M100,118 L100,156" stroke-width="5.5"></path>
+            <path d="M100,130 C82,132 62,136 42,139" stroke-width="4"></path>
+            <path d="M100,130 C118,132 138,136 158,139" stroke-width="4"></path>
+            <path d="M100,144 C84,148 66,153 50,157" stroke-width="3.6"></path>
+            <path d="M100,144 C116,148 134,153 150,157" stroke-width="3.6"></path>
+            <g stroke-width="2.4" opacity="0.85">
+              <path d="M64,135 C58,142 54,148 48,155"></path>
+              <path d="M136,135 C142,142 146,148 152,155"></path>
+              <path d="M86,132 C82,140 79,146 76,154"></path>
+              <path d="M114,132 C118,140 121,146 124,154"></path>
+              <path d="M76,152 C72,157 69,161 66,167"></path>
+              <path d="M124,152 C128,157 131,161 134,167"></path>
+              <path d="M92,148 C89,154 87,158 86,164"></path>
+              <path d="M108,148 C111,154 113,158 114,164"></path>
+              <path d="M100,156 L100,170"></path>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="beliefsGrid">
+        {BELIEFS.map((b) => (
+          <div class="beliefCard">
+            <p class="beliefLabel">{b.label}</p>
+            <p class="beliefBody">{b.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bridge">
+    <div class="bridgeInner">
+      <div class="bridgeSvgWrap">
+        <svg
+          viewBox="0 0 360 190"
+          preserveAspectRatio="xMidYMid meet"
+          class="bridgeSvg"
+          role="img"
+          aria-label="Suspension bridge"
+        >
+          <g stroke="#3A3A42" fill="none" stroke-linecap="round">
+            <g stroke-width="2.5">
+              <path d="M30.0,44.0 L30.0,128"></path>
+              <path d="M60.0,71.4 L60.0,128"></path>
+              <path d="M90.0,92.6 L90.0,128"></path>
+              <path d="M120.0,107.8 L120.0,128"></path>
+              <path d="M150.0,117.0 L150.0,128"></path>
+              <path d="M180.0,120.0 L180.0,128"></path>
+              <path d="M210.0,117.0 L210.0,128"></path>
+              <path d="M240.0,107.8 L240.0,128"></path>
+              <path d="M270.0,92.6 L270.0,128"></path>
+              <path d="M300.0,71.4 L300.0,128"></path>
+              <path d="M330.0,44.0 L330.0,128"></path>
+            </g>
+            <path d="M30,44 Q180,196 330,44" stroke-width="5"></path>
+            <path d="M0,68 L30,44 M330,44 L360,68" stroke-width="5"></path>
+            <path d="M0,128 L360,128" stroke-width="6"></path>
+            <path
+              d="M22,146 L22,20 L38,20 L38,146"
+              stroke-width="6"
+              stroke-linejoin="round"></path>
+            <path
+              d="M322,146 L322,20 L338,20 L338,146"
+              stroke-width="6"
+              stroke-linejoin="round"></path>
+            <path
+              d="M22,52 L38,52 M22,88 L38,88 M322,52 L338,52 M322,88 L338,88"
+              stroke-width="3.5"
+              opacity="0.65"></path>
+            <path d="M0,146 L360,146" stroke-width="3" opacity="0.45"></path>
+          </g>
+        </svg>
+      </div>
+      <p class="bridgeEyebrow">Building the Bridge</p>
+      <p class="bridgeBody">
+        There is a significant lack of formal, comprehensive Catholic
+        Reproductive Health Education accessible to schools, families, and
+        parish communities. That gap has left many of us without a
+        foundational understanding of how the human body functions, or of
+        how Catholic teaching upholds the dignity of the human person and
+        the meaning of human relationships.
+      </p>
+      <p class="bridgeBody">
+        The initiative is designed for Catholic schools, for parish
+        communities, and — most critically — for the home, equipping
+        parents as the primary educators of their children with resources
+        that align home formation with school instruction and parish
+        catechesis.
+      </p>
+      <div class="bridgeQuote">
+        <p>
+          <i
+            ><b
+              >Our ultimate goal is lasting cultural renewal, by forming
+              faithful disciples who understand, value, and live the
+              Church&rsquo;s teachings on the dignity of the human person,
+              respect for human life, and the sacredness of human
+              reproduction — beginning with how and why our bodies were made
+              as they are. <br />Join us in this mission!</b
+            ></i
+          >
+        </p>
+      </div>
+      <div class="bridgeClear" />
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroInner {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .heroTitle {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--color-cream);
+    white-space: nowrap;
+  }
+
+  .heroWordmark {
+    height: 62px;
+    width: auto;
+    display: block;
+  }
+
+  .foundersIntro {
+    padding: 72px 48px 76px;
+    background: var(--color-stone);
+    border-top: 1px solid #d8b9ab;
+  }
+
+  .foundersIntroInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .eyebrow--md {
+    font-size: 32px;
+  }
+
+  .foundersHeading {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .foundersLede {
+    font-size: 17px;
+    line-height: 1.65;
+    opacity: 0.8;
+    margin: 0;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+
+  .foundersGrid {
+    padding: 76px 48px 96px;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-stone);
+  }
+
+  .foundersGridInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px;
+    align-items: start;
+  }
+
+  .founderCard {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .founderPhoto {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 220px 220px 14px 14px;
+    border: 1px solid var(--color-stone);
+    overflow: hidden;
+    background: var(--color-cream);
+    margin-bottom: 30px;
+  }
+
+  .founderPhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .founderName {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 1.16;
+    margin: 0 0 10px;
+    color: var(--color-heading);
+    text-wrap: pretty;
+  }
+
+  .founderRole {
+    margin: 0 0 20px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-deep-rose);
+  }
+
+  .founderCard .rule {
+    margin-bottom: 22px;
+  }
+
+  .founderBio {
+    font-size: 17px;
+    line-height: 1.72;
+    opacity: 0.85;
+    text-wrap: pretty;
+  }
+
+  .founderBio p {
+    margin: 0;
+  }
+
+  .founderReadMore {
+    margin: 18px 0 0;
+  }
+
+  .founderReadMore a {
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .grounds {
+    padding: 48px 48px 56px;
+    background: var(--color-stone);
+  }
+
+  .groundsInner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .groundsIcon {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    padding-top: 36px;
+  }
+
+  .plant {
+    display: block;
+    width: 256px;
+    height: 414px;
+  }
+
+  .beliefsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 28px;
+  }
+
+  .beliefCard {
+    background: var(--color-cream);
+    border-radius: 16px;
+    padding: 36px 32px 34px;
+  }
+
+  .beliefLabel {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--color-heading);
+    margin: 0 0 14px;
+  }
+
+  .beliefBody {
+    font-size: 16px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .bridge {
+    padding: 40px 48px 88px;
+    background: var(--color-white);
+  }
+
+  .bridgeInner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .bridgeSvgWrap {
+    float: left;
+    width: 400px;
+    margin: 14px 56px 32px 0;
+  }
+
+  .bridgeSvg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .bridgeEyebrow {
+    margin: 0 0 28px;
+    font-size: 30px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-heading);
+  }
+
+  .bridgeBody {
+    font-size: 18px;
+    line-height: 1.72;
+    opacity: 0.85;
+    margin: 0 0 22px;
+    text-wrap: pretty;
+  }
+
+  .bridgeQuote {
+    margin-top: 14px;
+    padding: 30px 34px;
+    background: var(--color-cream);
+    border-radius: 16px;
+  }
+
+  .bridgeQuote p {
+    margin: 0;
+    font-family: 'Sorts Mill Goudy', Georgia, serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--color-heading);
+    text-wrap: pretty;
+    text-align: center;
+  }
+
+  .bridgeClear {
+    clear: both;
+  }
+
+  @media (max-width: 900px) {
+    .foundersGridInner {
+      grid-template-columns: 1fr;
+    }
+
+    .groundsInner {
+      grid-template-columns: 1fr;
+    }
+
+    .groundsIcon {
+      order: 0;
+    }
+
+    .bridgeSvgWrap {
+      float: none;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 32px;
+    }
+  }
+</style>
