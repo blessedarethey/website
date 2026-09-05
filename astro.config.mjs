@@ -14,7 +14,7 @@ export default defineConfig({
     // with an unhandled rejection before any page can render.
     devFeatures: { edgeFunctions: false },
   }),
-  site: 'https://blessedarethey.org', // TODO: replace with the real domain once purchased/confirmed
+  site: 'https://www.blessedarethey.com',
   // The Netlify adapter auto-enables session storage via Netlify Blobs unless
   // told otherwise, which pushed the account toward a paid plan before we
   // needed it. Nothing on the site uses sessions yet — turn this back on

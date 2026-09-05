@@ -12,6 +12,10 @@ interface Props {
    *  the shared dark SiteFooter. Defaults to 'site' since most pages are
    *  not the homepage. */
   footer?: 'home' | 'site';
+  /** Social-share (Open Graph/Twitter card) image, absolute or root-relative.
+   *  Defaults to the crest — swap in a proper 1200x630 og-image.jpg later
+   *  for a nicer link preview. */
+  image?: string;
 }
 
 const {
@@ -19,7 +23,12 @@ const {
   description = 'Blessed Are They',
   active,
   footer = 'site',
+  image = '/uploads/BATlogo.jpg',
 } = Astro.props;
+
+const pageTitle = `${title} | Blessed Are They`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
 ---
 
 <!doctype html>
@@ -28,7 +37,22 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <title>{title} | Blessed Are They</title>
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/jpeg" href="/uploads/BATlogo.jpg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Blessed Are They" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

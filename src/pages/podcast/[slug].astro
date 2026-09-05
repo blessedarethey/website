@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisode } from '../../lib/podcast';
+import { getEpisode, excerpt } from '../../lib/podcast';
 
 const { slug } = Astro.params;
 let episode: Awaited<ReturnType<typeof getEpisode>> = null;
@@ -17,7 +17,11 @@ if (!episode) {
 }
 ---
 
-<Layout title={episode.title} active="podcast">
+<Layout
+  title={episode.title}
+  description={episode.description ? excerpt(episode.description, 160) : 'Blessed Are They podcast'}
+  active="podcast"
+>
   <article>
     <h1>{episode.title}</h1>
     {episode.publishedAt && (
