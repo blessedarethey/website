@@ -1,9 +1,13 @@
 ---
-// Shared layout for each founder's individual bio page — Denise, Tuzdy,
-// and Kirsten's pages (Denise Montagnino.dc.html, Tuzdy Currlin.dc.html,
-// Kirsten King.dc.html) are all this exact same structure, differing only
-// in content, so this is one component rather than three copies of the
-// same markup.
+// Shared layout for each founder's individual bio page. Two distinct sets
+// of pages use this exact same structure, differing only in content and
+// the three props below:
+//  - the About founder bios (Denise Montagnino.dc.html, Tuzdy
+//    Currlin.dc.html, Kirsten King.dc.html) — the defaults below
+//  - the Podcast host bios (The Good - Tuzdy.dc.html, The True -
+//    Denise.dc.html, The Beautiful - Kirsten.dc.html) — same three
+//    founders, but framed around their podcast persona rather than their
+//    nonprofit role, so they get their own distinct copy and page.
 interface Props {
   name: string;
   role: string;
@@ -12,15 +16,31 @@ interface Props {
   /** Paragraph inner-HTML strings (bold/italic preserved from the source
    *  copy) — rendered via set:html, one <p> per entry. */
   bioHtml: string[];
-  /** Inner HTML for the closing "Her focus in Program Development" line. */
+  /** Inner HTML for the closing note (About: "Her focus in Program
+   *  Development"; Podcast: "Quote/Saint/Favorite pastime"). */
   focusHtml: string;
+  /** Hero title — the founder's name/section on About, or "The Good" /
+   *  "The True" / "The Beautiful" on the podcast host pages. */
+  heroTitle?: string;
+  backHref?: string;
+  backLabel?: string;
 }
 
-const { name, role, photo, objectPosition, bioHtml, focusHtml } = Astro.props;
+const {
+  name,
+  role,
+  photo,
+  objectPosition,
+  bioHtml,
+  focusHtml,
+  heroTitle = 'Founder',
+  backHref = '/about#founders',
+  backLabel = '← Back to the founders',
+} = Astro.props;
 ---
 
 <section class="hero">
-  <h1 class="heroTitle">Founder</h1>
+  <h1 class="heroTitle">{heroTitle}</h1>
 </section>
 
 <section class="profile">
@@ -37,7 +57,7 @@ const { name, role, photo, objectPosition, bioHtml, focusHtml } = Astro.props;
         <p class="focus" set:html={focusHtml} />
       </div>
       <p class="back">
-        <a href="/about#founders">&larr; Back to the founders</a>
+        <a href={backHref}>{backLabel}</a>
       </p>
     </div>
   </div>
