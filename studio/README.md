@@ -42,10 +42,10 @@ or from manage.sanity.io → your project → Datasets → Add dataset.
 
 ## Deploying the Studio
 
-Publishing content doesn't require deploying the Studio itself — `npm run
-dev` is enough for local editing against the real dataset. Deploy only if
-you want a hosted Studio URL (e.g. `blessed-are-they.sanity.studio`) that
-staff can reach without running anything locally:
+Deployed at **https://blessed-are-they.sanity.studio** — this is the URL
+staff actually use to publish content; log in there directly rather than
+running `npm run dev` locally. Re-deploy the same URL after a schema
+change (e.g. adding a field) with:
 
 ```bash
 npm run deploy
