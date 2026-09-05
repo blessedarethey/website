@@ -1,6 +1,7 @@
 ---
 // Homepage-only footer — cream, matches the footer built directly into
 // Homepage.dc.html (distinct from SiteFooter.astro, used everywhere else).
+import { FEED_URL } from '../lib/podcast';
 ---
 
 <footer class="footer">
@@ -32,7 +33,7 @@
         <a href="#">Apple Podcasts</a>
         <a href="#">Spotify</a>
         <a href="#">YouTube</a>
-        <a href="#">RSS</a>
+        <a href={FEED_URL}>RSS</a>
       </div>
     </div>
 

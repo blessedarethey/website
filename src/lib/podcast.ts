@@ -5,7 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 // Sanity "episode" schema so publishing an episode on the podcast host is
 // the only step; nothing has to be re-entered here. That schema is left in
 // Sanity Studio unused in case that decision changes later.
-const FEED_URL = 'https://anchor.fm/s/116517680/podcast/rss';
+export const FEED_URL = 'https://anchor.fm/s/116517680/podcast/rss';
 
 const parser = new XMLParser({
   ignoreAttributes: false,
