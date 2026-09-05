@@ -125,15 +125,17 @@ const visionPillars = [
       <p class="newsletter__body">
         One short email when a something new has sprouted...
       </p>
-      <form class="signupRow" onsubmit="event.preventDefault()">
+      <form class="signupRow" data-signup-form data-list="newsletter">
         <input
           type="email"
           placeholder="you@email.com"
           class="emailInput"
           aria-label="Email address"
+          required
         />
         <button type="submit" class="button">Sign up</button>
       </form>
+      <p class="formStatus" data-signup-status aria-live="polite"></p>
     </div>
   </section>
 
@@ -147,15 +149,17 @@ const visionPillars = [
         Put your name on the list and you will hear from us before it opens to
         anyone else.
       </p>
-      <form class="early-access__signup signupRow" onsubmit="event.preventDefault()">
+      <form class="early-access__signup signupRow" data-signup-form data-list="early-access">
         <input
           type="email"
           placeholder="you@email.com"
           class="emailInput"
           aria-label="Email address"
+          required
         />
         <button type="submit" class="button">Join the list</button>
       </form>
+      <p class="formStatus" data-signup-status aria-live="polite"></p>
       <p class="early-access__note">
         Bringing it to a school or parish?{' '}
         <a href="mailto:hello@blessedarethey.com?subject=Early%20access%3A%20Grades%204%2F5%20curriculum">
@@ -165,6 +169,51 @@ const visionPillars = [
     </div>
   </section>
 </Layout>
+
+<script>
+  // Wires up both email-signup forms above ("Sign up" / "Join the list") to
+  // POST /api/subscribe instead of doing nothing — each form's data-list
+  // attribute says which list the submission belongs to.
+  document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
+    const list = form.dataset.list || '';
+    const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = form.parentElement?.querySelector<HTMLElement>('[data-signup-status]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!input || !button || !status) return;
+
+      const email = input.value.trim();
+      button.disabled = true;
+      status.textContent = 'Signing up…';
+      status.className = 'formStatus';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, list }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          status.textContent = "Thanks — you're on the list!";
+          status.className = 'formStatus formStatus--success';
+          input.value = '';
+        } else {
+          status.textContent = data.error || 'Something went wrong — please try again.';
+          status.className = 'formStatus formStatus--error';
+        }
+      } catch {
+        status.textContent = 'Network error — please try again.';
+        status.className = 'formStatus formStatus--error';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>
 
 <style>
   /* ── Hero ─────────────────────────────────────────────────────────── */

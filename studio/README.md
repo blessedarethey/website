@@ -8,10 +8,18 @@ dev server, deployed on its own.
 ## Schemas
 
 - **`post`** — title, slug, publishedAt, excerpt, body (Portable Text).
-- **`episode`** — title, slug, publishedAt, audioUrl, description.
+- **`episode`** — title, slug, publishedAt, audioUrl, description. Unused by
+  the live site — podcast episodes are pulled from the RSS feed instead
+  (see `../src/lib/podcast.ts`).
+- **`emailSignup`** — email, list ("newsletter" or "early-access"),
+  submittedAt. Written automatically by the homepage's two email forms via
+  `../src/pages/api/subscribe.ts` — not something staff create by hand.
+  Open this in Studio (sorted "Submitted at, newest first") any time to see
+  who's signed up.
 
-Field names match exactly what `../src/lib/sanity.ts` queries — if you add
-or rename a field here, update that file's GROQ queries too.
+Field names match exactly what `../src/lib/sanity.ts` and
+`../src/pages/api/subscribe.ts` query/write — if you add or rename a field
+here, update those files too.
 
 ## Local development
 
