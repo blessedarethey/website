@@ -15,6 +15,25 @@ try {
 if (!episode) {
   return Astro.redirect('/podcast');
 }
+
+function formatDuration(seconds?: number): string | null {
+  if (!seconds || seconds <= 0) return null;
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const mm = h ? String(m).padStart(2, '0') : String(m);
+  const ss = String(s).padStart(2, '0');
+  return h ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+}
+
+const duration = formatDuration(episode.durationSeconds);
+const publishedLabel = episode.publishedAt
+  ? new Date(episode.publishedAt).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
 ---
 
 <Layout
@@ -22,16 +41,143 @@ if (!episode) {
   description={episode.description ? excerpt(episode.description, 160) : 'Blessed Are They podcast'}
   active="podcast"
 >
-  <article>
-    <h1>{episode.title}</h1>
-    {episode.publishedAt && (
-      <p><em>{new Date(episode.publishedAt).toLocaleDateString()}</em></p>
-    )}
-    {episode.audioUrl && (
-      <audio controls src={episode.audioUrl}>
-        Your browser doesn't support embedded audio.
-      </audio>
-    )}
-    {episode.description && <div set:html={episode.description} />}
+  <section class="hero">
+    <div class="heroInner">
+      <p class="heroEyebrow">Blessed Are They Podcast</p>
+      <h1 class="heroTitle">{episode.title}</h1>
+      <p class="heroMeta">
+        {episode.episodeNumber && <span>Episode {episode.episodeNumber}</span>}
+        {episode.episodeNumber && (publishedLabel || duration) && <span class="dot">&middot;</span>}
+        {publishedLabel && <span>{publishedLabel}</span>}
+        {publishedLabel && duration && <span class="dot">&middot;</span>}
+        {duration && <span>{duration}</span>}
+      </p>
+    </div>
+  </section>
+
+  <article class="article">
+    <div class="articleInner">
+      {episode.audioUrl && (
+        <div class="player">
+          <audio controls preload="none" src={episode.audioUrl}>
+            Your browser doesn't support embedded audio —
+            <a href={episode.audioUrl}>download the episode</a> instead.
+          </audio>
+        </div>
+      )}
+
+      {episode.description && (
+        <div class="showNotes" set:html={episode.description} />
+      )}
+    </div>
   </article>
+
+  <section class="backRow">
+    <a href="/podcast" class="backButton">&larr; Back to the podcast</a>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    padding: 40px 48px 44px;
+    background: var(--color-charcoal-light);
+  }
+
+  .heroInner {
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .heroEyebrow {
+    margin: 0 0 14px;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-amber);
+  }
+
+  .heroTitle {
+    font-size: 46px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    color: var(--color-stone);
+    text-wrap: balance;
+  }
+
+  .heroMeta {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--color-stone);
+    opacity: 0.85;
+  }
+
+  .heroMeta .dot {
+    margin: 0 10px;
+    opacity: 0.6;
+  }
+
+  .article {
+    padding: 48px 48px 56px;
+  }
+
+  .articleInner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .player {
+    margin-bottom: 40px;
+    padding: 22px 26px;
+    background: var(--color-cream);
+    border: 1px solid var(--color-stone);
+    border-radius: 16px;
+  }
+
+  .player audio {
+    display: block;
+    width: 100%;
+  }
+
+  .showNotes {
+    font-size: 18px;
+    line-height: 1.75;
+    opacity: 0.9;
+  }
+
+  .showNotes :global(p) {
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+
+  .showNotes :global(a) {
+    text-decoration: underline;
+  }
+
+  .backRow {
+    padding: 40px 48px 56px;
+    border-top: 1px solid var(--color-stone);
+    text-align: center;
+  }
+
+  .backButton {
+    display: inline-block;
+    padding: 15px 36px;
+    border: 1px solid var(--color-deep-sage);
+    border-radius: 999px;
+    font-size: 16px;
+    color: var(--color-charcoal);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .backButton:hover {
+    background: var(--color-deep-rose);
+    color: var(--color-white);
+    border-color: var(--color-deep-rose);
+  }
+</style>
