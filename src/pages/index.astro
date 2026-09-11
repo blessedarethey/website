@@ -131,17 +131,9 @@ const visionPillars = [
         educator and parent guides that go with them. You will hear from us
         before it opens to anyone else.
       </p>
-      <form class="signupRow" data-signup-form data-list="newsletter">
-        <input
-          type="email"
-          placeholder="you@email.com"
-          class="emailInput"
-          aria-label="Email address"
-          required
-        />
-        <button type="submit" class="button">Sign up</button>
-      </form>
-      <p class="formStatus" data-signup-status aria-live="polite"></p>
+      <div class="kitForm">
+        <script is:inline async data-uid="3c6881fada" src="https://blessed-are-they.kit.com/3c6881fada/index.js"></script>
+      </div>
       <p class="newsletter__note">
         Bringing it to a school or parish?{' '}
         <a href="mailto:hello@blessedarethey.com?subject=Early%20access%3A%20Grades%204%2F5%20curriculum">
@@ -151,50 +143,6 @@ const visionPillars = [
     </div>
   </section>
 </Layout>
-
-<script>
-  // Wires the homepage email-signup form to POST /api/subscribe instead of
-  // doing nothing.
-  document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
-    const list = form.dataset.list || '';
-    const input = form.querySelector<HTMLInputElement>('input[type="email"]');
-    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-    const status = form.parentElement?.querySelector<HTMLElement>('[data-signup-status]');
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (!input || !button || !status) return;
-
-      const email = input.value.trim();
-      button.disabled = true;
-      status.textContent = 'Signing up…';
-      status.className = 'formStatus';
-
-      try {
-        const res = await fetch('/api/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, list }),
-        });
-        const data = await res.json().catch(() => ({}));
-
-        if (res.ok) {
-          status.textContent = "Thanks — you're on the list!";
-          status.className = 'formStatus formStatus--success';
-          input.value = '';
-        } else {
-          status.textContent = data.error || 'Something went wrong — please try again.';
-          status.className = 'formStatus formStatus--error';
-        }
-      } catch {
-        status.textContent = 'Network error — please try again.';
-        status.className = 'formStatus formStatus--error';
-      } finally {
-        button.disabled = false;
-      }
-    });
-  });
-</script>
 
 <style>
   /* ── Hero ─────────────────────────────────────────────────────────── */
@@ -490,6 +438,13 @@ const visionPillars = [
     opacity: 0.8;
     margin: 0 0 32px;
     text-wrap: pretty;
+  }
+
+  .kitForm {
+    /* Kit's embedded form (see the script tag above) renders its own
+       input/button styling — this just keeps its spacing consistent with
+       the rest of the section. */
+    margin: 0 0 8px;
   }
 
   .newsletter__note {
