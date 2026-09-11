@@ -28,11 +28,14 @@ const visionPillars = [
 >
   <section class="hero">
     <div class="hero__content">
-      <img
-        class="hero__wordmark"
-        src="/uploads/slogan1-cream.png"
-        alt="blessed are they"
-      />
+      <span class="hero__wordmarkWrap">
+        <img
+          class="hero__wordmark"
+          src="/uploads/slogan1-cream.png"
+          alt="blessed are they"
+        />
+        <span class="hero__trademark">™</span>
+      </span>
       <p class="hero__headline">
         There is a gap in Catholic culture.<br />
         We are bridging it.
@@ -50,7 +53,7 @@ const visionPillars = [
     <div class="section-intro">
       <p class="eyebrow">The mission</p>
       <span class="rule" />
-      <p class="mission__headline">Total cultural change.</p>
+      <p class="mission__headline">Creating cultural change.</p>
       <p class="mission__body">
         Not a better pamphlet. Not one good lesson. A generation formed to
         know how and why their bodies<br />
@@ -120,43 +123,26 @@ const visionPillars = [
 
   <section class="newsletter">
     <div class="newsletter__inner">
-      <p class="newsletter__eyebrow">Stay connected</p>
+      <p class="newsletter__eyebrow">Stay connected and get early access</p>
       <h2 class="newsletter__headline">Join the BAT village, via inbox</h2>
       <p class="newsletter__body">
-        One short email when a something new has sprouted...
+        One short email whenever something new has sprouted — and your name
+        on the list for Phase I: four lessons, thirteen videos, and the
+        educator and parent guides that go with them. You will hear from us
+        before it opens to anyone else.
       </p>
-      <form class="signupRow" onsubmit="event.preventDefault()">
+      <form class="signupRow" data-signup-form data-list="newsletter">
         <input
           type="email"
           placeholder="you@email.com"
           class="emailInput"
           aria-label="Email address"
+          required
         />
         <button type="submit" class="button">Sign up</button>
       </form>
-    </div>
-  </section>
-
-  <section class="early-access">
-    <div class="early-access__inner">
-      <p class="early-access__eyebrow">Early access</p>
-      <h2 class="early-access__headline">Be the first to have it!</h2>
-      <p class="early-access__body">
-        Phase I is four lessons, thirteen videos, and the educator and parent
-        guides that go with them.<br />
-        Put your name on the list and you will hear from us before it opens to
-        anyone else.
-      </p>
-      <form class="early-access__signup signupRow" onsubmit="event.preventDefault()">
-        <input
-          type="email"
-          placeholder="you@email.com"
-          class="emailInput"
-          aria-label="Email address"
-        />
-        <button type="submit" class="button">Join the list</button>
-      </form>
-      <p class="early-access__note">
+      <p class="formStatus" data-signup-status aria-live="polite"></p>
+      <p class="newsletter__note">
         Bringing it to a school or parish?{' '}
         <a href="mailto:hello@blessedarethey.com?subject=Early%20access%3A%20Grades%204%2F5%20curriculum">
           Email us directly
@@ -165,6 +151,50 @@ const visionPillars = [
     </div>
   </section>
 </Layout>
+
+<script>
+  // Wires the homepage email-signup form to POST /api/subscribe instead of
+  // doing nothing.
+  document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
+    const list = form.dataset.list || '';
+    const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = form.parentElement?.querySelector<HTMLElement>('[data-signup-status]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!input || !button || !status) return;
+
+      const email = input.value.trim();
+      button.disabled = true;
+      status.textContent = 'Signing up…';
+      status.className = 'formStatus';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, list }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          status.textContent = "Thanks — you're on the list!";
+          status.className = 'formStatus formStatus--success';
+          input.value = '';
+        } else {
+          status.textContent = data.error || 'Something went wrong — please try again.';
+          status.className = 'formStatus formStatus--error';
+        }
+      } catch {
+        status.textContent = 'Network error — please try again.';
+        status.className = 'formStatus formStatus--error';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>
 
 <style>
   /* ── Hero ─────────────────────────────────────────────────────────── */
@@ -190,11 +220,27 @@ const visionPillars = [
     text-align: center;
   }
 
-  .hero__wordmark {
+  .hero__wordmarkWrap {
+    position: relative;
+    display: inline-block;
     width: 100%;
     max-width: 620px;
+  }
+
+  .hero__wordmark {
+    width: 100%;
     height: auto;
     display: block;
+  }
+
+  .hero__trademark {
+    position: absolute;
+    right: 20px;
+    top: 42px;
+    font-size: 17px;
+    letter-spacing: 0.04em;
+    color: var(--color-cream);
+    opacity: 0.75;
   }
 
   .hero__headline {
@@ -403,17 +449,17 @@ const visionPillars = [
     font-size: 14px;
   }
 
-  /* ── Newsletter / early access ───────────────────────────────────── */
+  /* ── Newsletter (merged with what used to be a separate early-access
+         section — one appeal, one form, covers both) ───────────────── */
 
   .newsletter {
     padding: 28px 48px 32px;
-    background: var(--color-cream);
+    background: var(--color-white);
     border-top: 1px solid var(--color-stone);
     border-bottom: 1px solid var(--color-stone);
   }
 
-  .newsletter__inner,
-  .early-access__inner {
+  .newsletter__inner {
     max-width: 760px;
     margin: 0 auto;
     text-align: center;
@@ -421,10 +467,11 @@ const visionPillars = [
 
   .newsletter__eyebrow {
     margin: 0 0 14px;
-    font-size: 38px;
-    letter-spacing: 0.18em;
+    font-size: 30px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-heading);
+    white-space: nowrap;
   }
 
   .newsletter__headline {
@@ -445,50 +492,14 @@ const visionPillars = [
     text-wrap: pretty;
   }
 
-  .early-access {
-    padding: 40px 48px 48px;
-    background: var(--color-stone);
-  }
-
-  .early-access__inner {
-    max-width: 820px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .early-access__eyebrow {
-    margin: 0 0 14px;
-    font-size: 40px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-heading);
-  }
-
-  .early-access__headline {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 1.15;
-    margin: 0 0 18px;
-    color: var(--color-heading);
-    text-wrap: pretty;
-  }
-
-  .early-access__body {
-    font-size: 18px;
-    line-height: 1.68;
-    opacity: 0.84;
-    margin: 0 0 34px;
-    text-wrap: pretty;
-  }
-
-  .early-access__signup {
-    width: 100%;
-  }
-
-  .early-access__note {
+  .newsletter__note {
     margin: 22px 0 0;
     font-size: 15px;
+  }
+
+  @media (max-width: 640px) {
+    .newsletter__eyebrow {
+      white-space: normal;
+    }
   }
 </style>

@@ -147,3 +147,22 @@ img {
   font-size: 16px;
   color: var(--color-charcoal);
 }
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.formStatus {
+  min-height: 1.2em;
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.formStatus--success {
+  color: var(--color-deep-sage);
+}
+
+.formStatus--error {
+  color: var(--color-deep-rose);
+}

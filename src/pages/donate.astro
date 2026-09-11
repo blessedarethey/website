@@ -28,7 +28,10 @@ const GOES_TO = [
   <section class="hero">
     <div class="heroInner">
       <p class="heroEyebrow">Support</p>
-      <img class="heroWordmark" src="/uploads/slogan1-cream.png" alt="blessed are they" />
+      <span class="heroWordmarkWrap">
+        <img class="heroWordmark" src="/uploads/slogan1-cream.png" alt="blessed are they" />
+        <span class="heroTrademark">™</span>
+      </span>
     </div>
   </section>
 
@@ -158,12 +161,27 @@ const GOES_TO = [
     color: var(--color-stone);
   }
 
-  .heroWordmark {
+  .heroWordmarkWrap {
+    position: relative;
+    display: inline-block;
     width: 100%;
     max-width: 420px;
+  }
+
+  .heroWordmark {
+    width: 100%;
     height: auto;
     display: block;
-    margin: 0 auto;
+  }
+
+  .heroTrademark {
+    position: absolute;
+    right: 13px;
+    top: 29px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--color-cream);
+    opacity: 0.75;
   }
 
   .give {
