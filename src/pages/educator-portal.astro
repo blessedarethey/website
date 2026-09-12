@@ -1,6 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+// Temporarily hidden at the user's request — not ready for visitors yet.
+// Already pulled from the nav (see lib/nav.ts); this redirect covers a
+// direct link or old bookmark too. To bring the page back: delete this
+// block and restore the two lines in nav.ts.
+return Astro.redirect('/');
+
 const FEATURES = [
   {
     title: 'Video Library',

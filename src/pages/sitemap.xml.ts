@@ -9,6 +9,9 @@ import { getEpisodes } from '../lib/podcast';
 // and episodes show up here automatically as soon as they're published.
 export const prerender = false;
 
+// /merch and /educator-portal are temporarily hidden at the user's request
+// (each redirects to / — see those files) — left out here so they aren't
+// resubmitted to search engines while hidden. Add back once un-hidden.
 const STATIC_PATHS = [
   '/',
   '/about',
@@ -19,9 +22,7 @@ const STATIC_PATHS = [
   '/events',
   '/podcast',
   '/blog',
-  '/merch',
   '/resources',
-  '/educator-portal',
   '/donate',
 ];
 

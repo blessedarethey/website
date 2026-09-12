@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+# Temporarily hidden — remove these two lines once un-hidden.
+Disallow: /merch
+Disallow: /educator-portal
 
 Sitemap: https://www.blessedarethey.com/sitemap.xml
