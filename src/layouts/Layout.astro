@@ -1,17 +1,12 @@
 ---
 import '../styles/global.css';
 import { NAV_ITEMS, DONATE_HREF, type NavKey } from '../lib/nav';
-import HomeFooter from '../components/HomeFooter.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 interface Props {
   title: string;
   description?: string;
   active?: NavKey;
-  /** 'home' gets the Homepage's own cream footer; every other page gets
-   *  the shared dark SiteFooter. Defaults to 'site' since most pages are
-   *  not the homepage. */
-  footer?: 'home' | 'site';
   /** Social-share (Open Graph/Twitter card) image, absolute or root-relative.
    *  Defaults to the crest — swap in a proper 1200x630 og-image.jpg later
    *  for a nicer link preview. */
@@ -22,7 +17,6 @@ const {
   title,
   description = 'Blessed Are They',
   active,
-  footer = 'site',
   image = '/uploads/BATlogo.jpg',
 } = Astro.props;
 
@@ -105,7 +99,7 @@ const socialImageURL = new URL(image, Astro.site);
       <slot />
     </main>
 
-    {footer === 'home' ? <HomeFooter /> : <SiteFooter />}
+    <SiteFooter />
 
     <style>
       .utility-bar {

@@ -1,7 +1,7 @@
 ---
-// Dark footer for every page except the Homepage, which keeps its own
-// cream footer (see HomeFooter.astro) — matches SiteFooter.dc.html from
-// the design handoff.
+// Shared dark footer for every page, including the Homepage — the design
+// dropped the Homepage's separate cream footer in favor of this one.
+// Matches SiteFooter.dc.html from the design handoff.
 ---
 
 <footer class="site-footer">
@@ -25,7 +25,6 @@
       <div class="col">
         <p class="colLabel">Contact</p>
         <a href="mailto:hello@blessedarethey.com">hello@blessedarethey.com</a>
-        <span class="address">106 Public Square, <br />Suite 115<br />Gallatin, TN 37066</span>
       </div>
 
       <div class="col">
@@ -42,7 +41,6 @@
       <div class="col">
         <p class="colLabel">Follow</p>
         <a href="#">Instagram</a>
-        <a href="#">YouTube</a>
         <a href="#">Facebook</a>
         <a href="#">Newsletter</a>
       </div>
@@ -144,12 +142,6 @@
     text-transform: uppercase;
     opacity: 0.55;
     color: var(--color-cream);
-  }
-
-  .address {
-    font-size: 15px;
-    opacity: 0.72;
-    line-height: 1.5;
   }
 
   .legalRow {
