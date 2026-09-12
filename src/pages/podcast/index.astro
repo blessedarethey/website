@@ -1,6 +1,25 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisodes, excerpt, FEED_URL } from '../../lib/podcast';
+import { getEpisodes, excerpt } from '../../lib/podcast';
+
+// Real links where we have them; iHeart Radio isn't set up yet, so it
+// stays a placeholder until the site owner sends the real one.
+const PLATFORMS = [
+  { name: 'Spotify', href: 'https://open.spotify.com/show/65ld4TXFHVTkfQUshJbmPU' },
+  {
+    name: 'Apple Podcasts',
+    href: 'https://podcasts.apple.com/us/podcast/blessed-are-they-the-podcast/id6811240916',
+  },
+  { name: 'iHeart Radio', href: '#' },
+  {
+    name: 'Amazon Music',
+    href: 'https://music.amazon.com/podcasts/3353eb6e-1b2a-4649-8bc2-c78ed2ca9bca/blessed-are-they---the-podcast',
+  },
+  {
+    name: 'Castbox',
+    href: 'https://castbox.fm/app/castbox/player/id7400143?v=8.22.11&autoplay=0',
+  },
+];
 
 const MIC_PATHS = [
   'M32 6a9 9 0 0 1 9 9v14a9 9 0 0 1-18 0V15a9 9 0 0 1 9-9Z',
@@ -98,8 +117,6 @@ const HOSTS = [
   </section>
 
   <section class="subscribe">
-    <a class="button button--large" href={FEED_URL}>Subscribe to the BAT Podcast</a>
-    <div class="spacer" />
     <svg
       class="mic"
       viewBox="0 0 64 64"
@@ -116,46 +133,59 @@ const HOSTS = [
       {MIC_PATHS.map((d) => <path d={d} />)}
     </svg>
     <h2 class="subscribeTitle">Testing, One, Two&hellip;</h2>
-    <div class="intro">
-      <p>
-        We are three mothers. Two of us are physicians, one of us has spent
-        her life in ministry. And we are done acting like faith and truth
-        belong in separate rooms.
-      </p>
-      <p>
-        Here is the thing we believe, and we think you will feel it too once
-        you hear it: you were made good. On purpose. Made for something
-        worth living out loud — not quietly, not apologetically, but
-        beautifully.
-      </p>
-      <p>
-        Each episode, we bring three voices to the table — medical,
-        developmental, and spiritual — and we do not let any one of them
-        carry the whole conversation alone. That is on purpose. The body is
-        not just a science topic, and it is not just a theology topic. It is
-        both, held together, and kids can tell when adults are only willing
-        to talk about half of it.
-      </p>
-      <p>
-        Everything we do is framed around the good, the true, and the
-        beautiful. We dig into Scripture, into real science, and into the
-        questions your kids are actually going to ask — the ones that show
-        up in the car, at bedtime, or completely out of nowhere at a large
-        family dinner. We hand you language you can actually use, no
-        theology degree and no perfect parenting required. This is for
-        parents raising kids they love fiercely, and for couples building a
-        marriage that lasts.
-      </p>
-      <p class="last">
-        Wherever you are starting from — lifelong Catholic, newly curious, or
-        just trying to figure out what to say to your own kids — pull up a
-        chair. You are welcome at this table.
-      </p>
+    <img
+      class="groupPhoto"
+      src="/uploads/BAT-Founders-Group-2026.jpg"
+      alt="Tuzdy, Denise and Kirsten"
+    />
+    <div class="listenBlock">
+      <p class="listenLabel">Listen and Subscribe On</p>
+      <div class="platformRow">
+        {
+          PLATFORMS.map((platform) => (
+            <a class="platformButton" href={platform.href}>
+              {platform.name}
+            </a>
+          ))
+        }
+      </div>
+      <div class="intro">
+        <p>
+          We are three mothers. Two of us are physicians, one of us has spent
+          her life in ministry. And we are done acting like faith and truth
+          belong in separate rooms.
+        </p>
+        <p>
+          Here is the thing we believe, and we think you will feel it too once
+          you hear it: you were made good. On purpose. Made for something
+          worth living out loud — not quietly, not apologetically, but
+          beautifully.
+        </p>
+        <p>
+          Each episode, we bring three voices to the table — medical,
+          developmental, and spiritual — and we do not let any one of them
+          carry the whole conversation alone. That is on purpose. The body is
+          not just a science topic, and it is not just a theology topic. It is
+          both, held together, and kids can tell when adults are only willing
+          to talk about half of it.
+        </p>
+        <p>
+          Everything we do is framed around the good, the true, and the
+          beautiful. We dig into Scripture, into real science, and into the
+          questions your kids are actually going to ask — the ones that show
+          up in the car, at bedtime, or completely out of nowhere at a large
+          family dinner. We hand you language you can actually use, no
+          theology degree and no perfect parenting required. This is for
+          parents raising kids they love fiercely, and for couples building a
+          marriage that lasts.
+        </p>
+        <p class="last">
+          Wherever you are starting from — lifelong Catholic, newly curious, or
+          just trying to figure out what to say to your own kids — pull up a
+          chair. You are welcome at this table.
+        </p>
+      </div>
     </div>
-  </section>
-
-  <section class="groupPhoto">
-    <img src="/uploads/BAT-Founders-Group-2026.jpg" alt="Tuzdy, Denise and Kirsten" />
   </section>
 
   <section class="series">
@@ -337,10 +367,6 @@ const HOSTS = [
     text-align: center;
   }
 
-  .spacer {
-    height: 24px;
-  }
-
   .mic {
     display: block;
     margin: 0 auto 18px;
@@ -357,6 +383,57 @@ const HOSTS = [
     text-wrap: pretty;
   }
 
+  .groupPhoto {
+    width: 100%;
+    max-width: 880px;
+    height: auto;
+    margin: 0 auto 32px;
+    display: block;
+    clip-path: inset(0 0 44px 0);
+  }
+
+  .listenBlock {
+    margin-top: -32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .listenLabel {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-heading);
+  }
+
+  .platformRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .platformButton {
+    display: inline-block;
+    padding: 12px 26px;
+    background: var(--color-white);
+    color: var(--color-heading);
+    border: 1px solid #d8b9ab;
+    border-radius: 999px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .platformButton:hover {
+    background: var(--color-charcoal-light);
+    color: var(--color-cream);
+    border-color: var(--color-charcoal-light);
+  }
+
   .intro {
     font-size: 19px;
     line-height: 1.7;
@@ -371,20 +448,6 @@ const HOSTS = [
 
   .intro p.last {
     margin: 0;
-  }
-
-  .groupPhoto {
-    padding: 40px 48px;
-    background: var(--color-cream);
-  }
-
-  .groupPhoto img {
-    width: 100%;
-    max-width: 880px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-    clip-path: inset(0 0 32px 0);
   }
 
   .series {
