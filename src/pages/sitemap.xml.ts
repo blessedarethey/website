@@ -24,6 +24,7 @@ const STATIC_PATHS = [
   '/blog',
   '/resources',
   '/donate',
+  '/privacy',
 ];
 
 function urlEntry(loc: string, lastmod?: string) {
