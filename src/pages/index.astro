@@ -57,11 +57,17 @@ const visionPillars = [
       <span class="rule" />
       <p class="mission__headline">Creating cultural change.</p>
       <p class="mission__body">
-        Not a better pamphlet. Not one good lesson. A generation formed to
-        know how and why their bodies<br />
-        were made — until the truth of the human person is simply the air
-        Catholic families breathe.<br />
-        That&rsquo;s the gap <i>Blessed Are They</i> exists to close.
+        <span class="mission__line"
+          >Not a better pamphlet. Not one good lesson. A generation formed to
+          know how and why their bodies</span
+        ><br />
+        <span class="mission__line"
+          >were made — until the truth of the human person is simply the air
+          Catholic families breathe.</span
+        ><br />
+        <span class="mission__line"
+          >That&rsquo;s the gap <i>Blessed Are They</i> exists to close.</span
+        >
       </p>
     </div>
   </section>
@@ -72,8 +78,11 @@ const visionPillars = [
         <p class="eyebrow">The vision</p>
         <span class="rule" />
         <h2 class="vision__headline">
-          Culture changes one classroom and one kitchen table at a time.<br />
-           We start with the curriculum.
+          <span class="vision__line"
+            >Culture changes one classroom and one kitchen table at a
+            time.</span
+          ><br />
+          <span class="vision__line">We start with the curriculum.</span>
         </h2>
         <p class="vision__lede">
           This is not a lesson delivered once. It is one message that grows
@@ -317,6 +326,21 @@ const visionPillars = [
     text-wrap: pretty;
   }
 
+  /* Force each intended line to hold as one line at normal desktop
+     widths — the <br> alone breaks unpredictably before then, wrapping
+     an extra orphan line depending on viewport width and font metrics.
+     Below the breakpoint there isn't room for the line at all, so let
+     it wrap naturally instead of overflowing. */
+  .mission__line {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1050px) {
+    .mission__line {
+      white-space: normal;
+    }
+  }
+
   /* ── Vision ───────────────────────────────────────────────────────── */
 
   .vision {
@@ -343,6 +367,16 @@ const visionPillars = [
     margin: 0;
     color: var(--color-heading);
     text-wrap: pretty;
+  }
+
+  .vision__line {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 920px) {
+    .vision__line {
+      white-space: normal;
+    }
   }
 
   .vision__lede {
