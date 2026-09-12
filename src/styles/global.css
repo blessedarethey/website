@@ -148,3 +148,8 @@ img {
   color: var(--color-charcoal);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+

@@ -135,12 +135,9 @@ const visionPillars = [
         class="signupRow"
         action="https://app.kit.com/forms/9886033/subscriptions"
         method="post"
-        data-sv-form="9886033"
-        data-uid="3c6881fada"
-        data-format="inline"
-        data-version="5"
+        target="kitSignupFrame"
+        data-signup-form
       >
-        <ul class="formStatus" data-element="errors"></ul>
         <input
           type="email"
           name="email_address"
@@ -151,7 +148,8 @@ const visionPillars = [
         />
         <button type="submit" class="button">Sign up</button>
       </form>
-      <script is:inline src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+      <p class="formStatus" data-signup-status aria-live="polite"></p>
+      <iframe name="kitSignupFrame" title="" hidden></iframe>
       <p class="newsletter__note">
         Bringing it to a school or parish?{' '}
         <a href="mailto:hello@blessedarethey.com?subject=Early%20access%3A%20Grades%204%2F5%20curriculum">
@@ -161,6 +159,35 @@ const visionPillars = [
     </div>
   </section>
 </Layout>
+
+<script>
+  // The form's target="kitSignupFrame" already sends the POST to Kit inside
+  // a hidden iframe instead of navigating the page — this just shows our
+  // own message afterward. We can't read the iframe's (cross-origin)
+  // response, so this is optimistic: if Kit's endpoint rejects a
+  // malformed-but-technically-valid address, the visitor won't be told —
+  // acceptable here since the input's required+type="email" already blocks
+  // the obvious cases before it ever submits.
+  document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+    const status = form.parentElement?.querySelector<HTMLElement>('[data-signup-status]');
+
+    form.addEventListener('submit', () => {
+      if (!button || !input || !status) return;
+      button.disabled = true;
+      status.textContent = 'Signing up…';
+      status.className = 'formStatus';
+
+      setTimeout(() => {
+        status.textContent = "Thanks — you're on the list!";
+        status.className = 'formStatus formStatus--success';
+        input.value = '';
+        button.disabled = false;
+      }, 1200);
+    });
+  });
+</script>
 
 <style>
   /* ── Hero ─────────────────────────────────────────────────────────── */
@@ -458,20 +485,18 @@ const visionPillars = [
     text-wrap: pretty;
   }
 
-  /* Populated by Kit's ck.5.js (see the script tag above) when the
-     form's email fails validation or Kit rejects the submission — empty
-     and invisible otherwise. */
   .formStatus {
-    flex-basis: 100%;
-    list-style: none;
-    margin: 0 0 8px;
-    padding: 0;
+    min-height: 1.2em;
+    margin: 14px 0 0;
     font-size: 14px;
-    color: var(--color-deep-rose);
   }
 
-  .formStatus:empty {
-    display: none;
+  .formStatus--success {
+    color: var(--color-deep-sage);
+  }
+
+  .formStatus--error {
+    color: var(--color-deep-rose);
   }
 
   .newsletter__note {
