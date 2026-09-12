@@ -36,13 +36,17 @@ const visionPillars = [
         <span class="hero__trademark">™</span>
       </span>
       <p class="hero__headline">
-        There is a gap in Catholic culture.<br />
-        We are bridging it.
+        <span class="hero__line">There is a gap in Catholic culture.</span><br />
+        <span class="hero__line">We are bridging it.</span>
       </p>
       <p class="hero__subhead">
-        Blessed Are They is a Catholic nonprofit seeking to unite scientific
-        accuracy and Catholic faith in forming<br />
-        the next generation — uncompromisingly faithful to the Church.
+        <span class="hero__line"
+          >Blessed Are They is a Catholic nonprofit seeking to unite
+          scientific accuracy and Catholic faith in forming</span
+        ><br />
+        <span class="hero__line"
+          >the next generation — uncompromisingly faithful to the Church.</span
+        >
       </p>
       <a href="#mission" class="button">Learn about our mission</a>
     </div>
@@ -252,6 +256,28 @@ const visionPillars = [
     margin: 0;
     max-width: 980px;
     text-wrap: pretty;
+  }
+
+  /* Force each line to hold as a single line at normal desktop widths —
+     relying on the <br> alone breaks unpredictably before then, wrapping
+     to a third line depending on viewport width and font metrics. Below
+     each breakpoint there isn't room for the line at all, so let it wrap
+     naturally instead of overflowing. */
+  .hero__headline .hero__line,
+  .hero__subhead .hero__line {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .hero__headline .hero__line {
+      white-space: normal;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .hero__subhead .hero__line {
+      white-space: normal;
+    }
   }
 
   /* ── Shared section chrome ───────────────────────────────────────── */
