@@ -2,9 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import {
   getResourceSections,
+  getChurchDocuments,
   resourceLabel,
   LIFE_STAGES,
   type ResourceSection,
+  type ChurchDocument,
 } from '../lib/sanity';
 
 // Sections and their items come from Sanity ("Resource section" and
@@ -21,13 +23,14 @@ try {
 
 const STAGES = ['All', ...LIFE_STAGES];
 
-const RESTS_ON = [
-  { meta: 'Encyclical · 1968', title: 'Humanae Vitae', href: 'https://www.vatican.va/content/paul-vi/en/encyclicals/documents/hf_p-vi_enc_25071968_humanae-vitae.html', desc: 'Paul VI on married love and the transmission of life — the document most often described and least often read.' },
-  { meta: 'Catecheses · 1979–84', title: 'Theology of the Body', href: 'https://www.vatican.va/content/john-paul-ii/en/audiences.index.html', linkLabel: 'Audiences at Vatican.va', desc: 'John Paul II’s Wednesday audiences on the body as a sign of the person. The ground floor of everything here.' },
-  { meta: 'Instruction · 1987', title: 'Donum Vitae', href: 'https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_19870222_respect-for-human-life_en.html', desc: 'On the dignity of human life at its origin, and the questions reproductive technology puts to it.' },
-  { meta: 'Encyclical · 1930', title: 'Casti Connubii', href: 'https://www.vatican.va/content/pius-xi/en/encyclicals/documents/hf_p-xi_enc_19301231_casti-connubii.html', desc: 'Pius XI on Christian marriage — the teaching stated plainly, decades before it became contested.' },
-  { meta: 'Exhortation · 1981', title: 'Familiaris Consortio', href: 'https://www.vatican.va/content/john-paul-ii/en/apost_exhortations/documents/hf_jp-ii_exh_19811122_familiaris-consortio.html', desc: 'John Paul II on the family, and on the parents’ own right and duty to educate their children in this.' },
-];
+// "What This Rests On" entries — "Church document" in the Studio.
+let churchDocs: ChurchDocument[] = [];
+let churchDocsFailed = false;
+try {
+  churchDocs = await getChurchDocuments();
+} catch {
+  churchDocsFailed = true;
+}
 ---
 
 <Layout
@@ -164,40 +167,38 @@ const RESTS_ON = [
             from — read them yourself.
           </p>
         </div>
-        <div class="docsGrid">
-          {RESTS_ON.map((doc) => (
-            <div class="doc">
-              <p class="docMeta">{doc.meta}</p>
-              <h4 class="docTitle">{doc.title}</h4>
-              <a href={doc.href} target="_blank" rel="noopener" class="itemLink">
-                {doc.linkLabel || 'Read at Vatican.va'}
-              </a>
-              <p class="itemDesc">{doc.desc}</p>
-            </div>
-          ))}
-          <div class="doc">
-            <p class="docMeta">Catechism &middot; 1992</p>
-            <h4 class="docTitle">Catechism of the Catholic Church</h4>
-            <a
-              href="https://www.vatican.va/archive/ENG0015/_INDEX.HTM"
-              target="_blank"
-              rel="noopener"
-              class="itemLink"
-            >
-              Read at Vatican.va
-            </a>
-            <p class="itemDesc catechismDesc">
-              God&rsquo;s plan for love and sexuality, stated directly. Four
-              passages carry most of it:
-            </p>
-            <div class="catechismLinks">
-              <a href="https://www.vatican.va/archive/ENG0015/__P1B.HTM" target="_blank" rel="noopener">355&ndash;421 &middot; Man, male and female, and the Fall</a>
-              <a href="https://www.vatican.va/content/catechism/en/part_two/section_two/chapter_three/article_7.html" target="_blank" rel="noopener">1601&ndash;1666 &middot; The Sacrament of Matrimony</a>
-              <a href="https://www.vatican.va/content/catechism/en/part_three/section_two/chapter_two/article_6.html" target="_blank" rel="noopener">2331&ndash;2400 &middot; The Sixth Commandment</a>
-              <a href="https://www.vatican.va/content/catechism/en/part_three/section_two/chapter_two/article_9.html" target="_blank" rel="noopener">2514&ndash;2533 &middot; The Ninth Commandment</a>
-            </div>
+        {churchDocsFailed ? (
+          <p class="loadError">
+            Couldn&rsquo;t load these documents right now &mdash; try again
+            shortly.
+          </p>
+        ) : (
+          <div class="docsGrid">
+            {churchDocs.map((doc) => (
+              <div class="doc">
+                {doc.meta && <p class="docMeta">{doc.meta}</p>}
+                <h4 class="docTitle">{doc.title}</h4>
+                <a href={doc.url} target="_blank" rel="noopener" class="itemLink">
+                  {doc.linkLabel || 'Read at Vatican.va'}
+                </a>
+                {doc.description && (
+                  <p class:list={['itemDesc', { catechismDesc: doc.passages?.length }]}>
+                    {doc.description}
+                  </p>
+                )}
+                {doc.passages?.length ? (
+                  <div class="catechismLinks">
+                    {doc.passages.map((passage) => (
+                      <a href={passage.url} target="_blank" rel="noopener">
+                        {passage.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   </section>

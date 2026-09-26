@@ -74,6 +74,11 @@ The life-stage list lives in two places that must match:
 `schemaTypes/resource.ts` (the Studio checkboxes) and `LIFE_STAGES` in the
 site's `src/lib/sanity.ts` (the page's filter buttons).
 
+A third type, **Church document**, drives the "What This Rests On"
+section at the bottom of the page: title, label (e.g. "Encyclical ·
+1968"), description, link, optional link text, optional key-passage links
+(used for the Catechism), and a number for its order.
+
 ### One-time import of the original resources
 
 `seed/resources.ndjson` holds the six sections and 24 resources that were
@@ -88,3 +93,10 @@ npx sanity dataset import seed/resources.ndjson production --replace
 second run overwrites them rather than creating duplicates. Don't re-run
 it after staff have started editing resources, or their edits to these
 24 items will be overwritten.
+
+The six original Church documents are in `seed/church-documents.ndjson`,
+imported the same way:
+
+```bash
+npx sanity dataset import seed/church-documents.ndjson --dataset production --replace
+```

@@ -123,3 +123,22 @@ export async function getResourceSections(): Promise<ResourceSection[]> {
     }))
     .filter((s) => s.items.length > 0);
 }
+
+// "What This Rests On" at the bottom of the Resources page.
+export type ChurchDocument = {
+  _id: string;
+  title: string;
+  meta?: string;
+  description?: string;
+  url: string;
+  linkLabel?: string;
+  passages?: { _key: string; label: string; url: string }[];
+};
+
+export async function getChurchDocuments(): Promise<ChurchDocument[]> {
+  return sanity.fetch(
+    `*[_type == "churchDocument"] | order(order asc, title asc){
+      _id, title, meta, description, url, linkLabel, passages
+    }`
+  );
+}
