@@ -48,3 +48,78 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     { slug }
   );
 }
+
+// ── Resources page ──────────────────────────────────────────────────────
+// Must match LIFE_STAGES in studio/schemaTypes/resource.ts (a separate
+// package, so it can't be imported from here). Order matters: it's the
+// filter-button order and the automatic sort order within a section.
+export const LIFE_STAGES = [
+  'Childhood',
+  'Adolescent',
+  'Teen',
+  'Young Adult',
+  'Engaged',
+  'Married',
+  'Later Years',
+];
+
+export type Resource = {
+  _id: string;
+  title: string;
+  description?: string;
+  lifeStages?: string[];
+  type?: string;
+  source?: 'ours' | 'curated';
+  publisher?: string;
+  sortOrder?: number;
+  fileUrl?: string;
+  externalUrl?: string;
+};
+
+export type ResourceSection = {
+  _id: string;
+  title: string;
+  blurb?: string;
+  items: Resource[];
+};
+
+// "Guide · Ours", "Prayer · USCCB", "Books · Curated"
+export function resourceLabel(r: Resource): string {
+  const from =
+    r.source === 'curated' ? r.publisher?.trim() || 'Curated' : 'Ours';
+  return [r.type, from].filter(Boolean).join(' · ');
+}
+
+// Earliest life stage first ("All stages" — no stages ticked — last),
+// then the optional sortOrder, then title.
+function compareResources(a: Resource, b: Resource): number {
+  const firstStage = (r: Resource) => {
+    const idx = (r.lifeStages || [])
+      .map((s) => LIFE_STAGES.indexOf(s))
+      .filter((i) => i >= 0);
+    return idx.length ? Math.min(...idx) : LIFE_STAGES.length;
+  };
+  return (
+    firstStage(a) - firstStage(b) ||
+    (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) ||
+    a.title.localeCompare(b.title)
+  );
+}
+
+export async function getResourceSections(): Promise<ResourceSection[]> {
+  const sections: ResourceSection[] = await sanity.fetch(
+    `*[_type == "resourceSection"] | order(order asc, title asc){
+      _id, title, blurb,
+      "items": *[_type == "resource" && references(^._id)]{
+        _id, title, description, lifeStages, type, source, publisher,
+        sortOrder, externalUrl, "fileUrl": file.asset->url
+      }
+    }`
+  );
+  return sections
+    .map((s) => ({
+      ...s,
+      items: [...(s.items || [])].sort(compareResources),
+    }))
+    .filter((s) => s.items.length > 0);
+}

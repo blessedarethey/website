@@ -1,74 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import {
+  getResourceSections,
+  resourceLabel,
+  LIFE_STAGES,
+  type ResourceSection,
+} from '../lib/sanity';
 
-// Raw item data, matching Resources.dc.html's component state. "tags"
-// list which life stages an item applies to; an item with no tags is
-// stage-agnostic and shows under every filter. "band" splits the Girls &
-// Women / Boys & Men columns into "Growing Up" vs "The Adult Years"
-// shelves, matching the source's dynamic column-splitting logic — done
-// here at build time since the split itself never changes, only which
-// items are visible within it (that part is the client-side interactive
-// piece, since this project has no UI framework to make it reactive).
-type Item = {
-  meta: string;
-  title: string;
-  desc: string;
-  href?: string;
-  tags: string[] | null;
-  band?: 'Growing Up';
-};
+// Sections and their items come from Sanity ("Resource section" and
+// "Resource" in the Studio) so staff can add, retag, or reorder them
+// without a code change. Sorting within a section (by life stage, then
+// the optional sort order) happens in getResourceSections().
+let sections: ResourceSection[] = [];
+let loadFailed = false;
+try {
+  sections = await getResourceSections();
+} catch {
+  loadFailed = true;
+}
 
-const GIRLS_WOMEN: Item[] = [
-  { band: 'Growing Up', meta: 'Handout · Ours', title: 'Preparing for the First Cycle', desc: 'Hygiene and body care before menarche, so the first cycle arrives expected rather than alarming.', href: '/uploads/BAT_Perimenarche_Hygiene-71e9a39e.pdf', tags: ['Childhood', 'Adolescent'] },
-  { band: 'Growing Up', meta: 'Chart · Ours', title: 'My First Cycle Chart', desc: 'A first chart to keep, with room to record what happens each day and what it means.', href: '/uploads/BAT_First_Cycle_Chart (1).pdf', tags: ['Childhood', 'Adolescent', 'Teen'] },
-  { band: 'Growing Up', meta: 'Chart · Ours', title: 'Monthly Cycle Chart', desc: 'A month at a time, to keep track of the pattern once the first cycles have come and gone.', href: '/uploads/BAT_Monthly_Cycle_Chart.pdf', tags: ['Adolescent', 'Teen'] },
-  { band: 'Growing Up', meta: 'Chart · Ours', title: 'Cycle Charting for Teens', desc: 'Charting the full cycle, what each phase means, and what is worth telling a doctor about.', href: '/uploads/BAT_Cycle_Charting_Teens.pdf', tags: ['Adolescent', 'Teen'] },
-  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Phases of the Menstrual Cycle', desc: 'The four phases for teens — what happens in each one and what it means for how she feels.', href: '/uploads/BAT_Cycle_Awareness_Teens.pdf', tags: ['Adolescent', 'Teen'] },
-  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Hygiene & Body Care', desc: 'Practical care through puberty, framed around dignity rather than embarrassment.', tags: ['Adolescent', 'Teen'] },
-  { meta: 'Guide · Ours', title: 'Fertility Awareness Basics', desc: 'An introduction to fertility awareness–based methods and how to learn one properly.', tags: ['Young Adult'] },
-  { meta: 'Guide · Curated', title: 'Natural Family Planning', desc: 'What the methods are, how they differ, and where to find a trained instructor.', tags: ['Married'] },
-  { meta: 'Guide · Ours', title: 'Perimenopause Supplement Guide', desc: 'What changes, what helps, and what is worth asking your physician — from an OB/GYN.', tags: ['Later Years'] },
-];
-
-const BOYS_MEN: Item[] = [
-  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Growing Up: The Basics', desc: 'Age-appropriate anatomy and what to expect, for a boy and the parent teaching him.', tags: ['Adolescent'] },
-  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Hygiene & Body Care', desc: 'Practical care through puberty, written the way a father would want it said.', tags: ['Teen'] },
-  { band: 'Growing Up', meta: 'Guide · Ours', title: 'Dignity in the Digital Age', desc: 'Safeguarding the dignity of the human person in the digital age.', tags: ['Teen', 'Young Adult'] },
-  { meta: 'Guide · Curated', title: 'Chastity as Strength', desc: 'What the Church actually teaches about self-mastery, and why it is not a restriction.', tags: ['Young Adult'] },
-  { meta: 'Guide · Ours', title: 'Fertility, Together', desc: 'Understanding your wife’s cycle and sharing responsibility for it.', tags: ['Married'] },
-];
-
-const COUPLES: Item[] = [
-  { meta: 'Prayer · USCCB', title: 'NFP Week Prayer Card', desc: 'A printable card for Natural Family Planning Week from the USCCB — for a nightstand, a fridge, or a parish pew.', href: '/uploads/NFP Week Payer Card 3.25x5.25 Print.pdf', tags: ['Engaged', 'Married'] },
-  { meta: 'Guide · Ours', title: 'Before the Wedding', desc: 'What to settle together about children, charting, and intimacy before the day arrives.', tags: ['Engaged'] },
-  { meta: 'Guide · Curated', title: 'Choosing a Method Together', desc: 'How the major methods compare, and how to find an instructor who will teach you both.', tags: ['Engaged', 'Married'] },
-  { meta: 'Chart · Ours', title: 'Charting as Two', desc: 'Reading the chart together, so postponing or pursuing a pregnancy is a shared decision.', tags: ['Married'] },
-  { meta: 'Guide · Ours', title: 'When Conceiving Is Hard', desc: 'Restorative approaches to infertility and loss, and where to find physicians who practice them.', tags: ['Married'] },
-  { meta: 'Guide · Ours', title: 'Postpartum & the Return of Fertility', desc: 'Breastfeeding, irregular cycles, and how to chart in the season with the least sleep.', tags: ['Married'] },
-  { meta: 'Books · Curated', title: 'Reading for Two', desc: 'Theology of the Body for married life — short enough to read aloud in an evening.', tags: ['Married', 'Later Years'] },
-];
-
-const PARENTS: Item[] = [
-  { meta: 'Parent Guide · Ours', title: 'Preparing for the First Cycle', desc: 'The companion to your daughter’s handout — how to have the conversation early, and what to have ready.', href: '/uploads/BAT_Preparing_Her_Parent_Guide.pdf', tags: ['Childhood', 'Adolescent'] },
-  { meta: 'Checklist · Ours', title: 'First Menses Kit', desc: 'What to pack in the bag she keeps in her backpack, so she is never caught without it.', href: '/uploads/BAT_First_Menses_Kit.pdf', tags: ['Childhood', 'Adolescent'] },
-  { meta: 'Guide · Ours', title: 'Conversation Starters', desc: 'Openers and answers for the questions that arrive in the car and at bedtime.', tags: null },
-];
-
-const SHELVES: {
-  key: string;
-  title: string;
-  blurb: string;
-  items: Item[];
-}[] = [
-  { key: 'girls', title: 'For Girls', blurb: 'Before and through puberty', items: GIRLS_WOMEN.filter((i) => i.band === 'Growing Up') },
-  { key: 'women', title: 'For Women', blurb: 'Fertility through the later years', items: GIRLS_WOMEN.filter((i) => i.band !== 'Growing Up') },
-  { key: 'boys', title: 'For Boys', blurb: 'Growing up, and growing into it', items: BOYS_MEN.filter((i) => i.band === 'Growing Up') },
-  { key: 'men', title: 'For Men', blurb: 'Self-mastery, marriage, fatherhood', items: BOYS_MEN.filter((i) => i.band !== 'Growing Up') },
-  { key: 'couples', title: 'For Couples', blurb: 'Preparing for marriage, and living it', items: COUPLES },
-  { key: 'parents', title: 'For Parents', blurb: 'How to say it before they need to hear it', items: PARENTS },
-];
-
-const STAGES = ['All', 'Childhood', 'Adolescent', 'Teen', 'Young Adult', 'Engaged', 'Married', 'Later Years', 'For Couples'];
+const STAGES = ['All', ...LIFE_STAGES];
 
 const RESTS_ON = [
   { meta: 'Encyclical · 1968', title: 'Humanae Vitae', href: 'https://www.vatican.va/content/paul-vi/en/encyclicals/documents/hf_p-vi_enc_25071968_humanae-vitae.html', desc: 'Paul VI on married love and the transmission of life — the document most often described and least often read.' },
@@ -165,34 +116,41 @@ const RESTS_ON = [
         ))}
       </div>
 
-      <div class="shelfGrid" id="shelfGrid">
-        {SHELVES.map((shelf) => (
-          <div class="shelf" data-shelf={shelf.key}>
-            <h3 class="shelfTitle">{shelf.title}</h3>
-            <p class="shelfBlurb">{shelf.blurb}</p>
-            {shelf.items.map((item) => (
-              <div
-                class="item"
-                data-tags={item.tags ? item.tags.join(',') : ''}
-              >
-                <div class="itemMetaRow">
-                  <p class="itemStage" data-first-tag={item.tags?.[0] || ''}>
-                    {item.tags ? item.tags[0] : 'All stages'}
-                  </p>
-                  <p class="itemMeta">{item.meta}</p>
-                </div>
-                <h4 class="itemTitle">{item.title}</h4>
-                {item.href && (
-                  <a href={item.href} target="_blank" class="itemLink" rel="noopener">
-                    Download PDF
-                  </a>
-                )}
-                <p class="itemDesc">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      {loadFailed ? (
+        <p class="loadError">
+          Couldn&rsquo;t load the library right now &mdash; try again shortly.
+        </p>
+      ) : (
+        <div class="shelfGrid" id="shelfGrid">
+          {sections.map((shelf) => (
+            <div class="shelf">
+              <h3 class="shelfTitle">{shelf.title}</h3>
+              {shelf.blurb && <p class="shelfBlurb">{shelf.blurb}</p>}
+              {shelf.items.map((item) => {
+                const tags = item.lifeStages || [];
+                const href = item.fileUrl || item.externalUrl;
+                return (
+                  <div class="item" data-tags={tags.join(',')}>
+                    <div class="itemMetaRow">
+                      <p class="itemStage" data-first-tag={tags[0] || ''}>
+                        {tags[0] || 'All stages'}
+                      </p>
+                      <p class="itemMeta">{resourceLabel(item)}</p>
+                    </div>
+                    <h4 class="itemTitle">{item.title}</h4>
+                    {href && (
+                      <a href={href} target="_blank" class="itemLink" rel="noopener">
+                        {item.fileUrl ? 'Download PDF' : 'View resource'}
+                      </a>
+                    )}
+                    {item.description && <p class="itemDesc">{item.description}</p>}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
@@ -273,9 +231,8 @@ const RESTS_ON = [
 <script>
   // Progressive-enhancement filter: everything above renders with all
   // shelves/items visible (so it's a real page with no JS too) — this
-  // just narrows what's shown. "For Couples" is its own mode: only the
-  // Couples shelf shows, unfiltered, matching the source design's
-  // treatment of it as a shortcut rather than a stage.
+  // just narrows what's shown. Items with no life stages ticked are
+  // "All stages" and show under every filter.
   const buttons = Array.from(
     document.querySelectorAll<HTMLButtonElement>('.stageBtn')
   );
@@ -285,25 +242,9 @@ const RESTS_ON = [
   const grid = document.getElementById('shelfGrid');
 
   function applyFilter(stage: string) {
-    const coupleMode = stage === 'For Couples';
     let visibleShelves = 0;
 
     shelves.forEach((shelf) => {
-      const key = shelf.dataset.shelf;
-      if (coupleMode) {
-        const show = key === 'couples';
-        shelf.classList.toggle('shelf--hidden', !show);
-        if (show) {
-          visibleShelves++;
-          shelf.querySelectorAll<HTMLElement>('.item').forEach((item) => {
-            item.classList.remove('item--hidden');
-            const badge = item.querySelector<HTMLElement>('.itemStage');
-            if (badge) badge.textContent = badge.dataset.firstTag || 'All stages';
-          });
-        }
-        return;
-      }
-
       let visibleItems = 0;
       shelf.querySelectorAll<HTMLElement>('.item').forEach((item) => {
         const tags = item.dataset.tags ? item.dataset.tags.split(',') : [];
@@ -438,6 +379,13 @@ const RESTS_ON = [
     font-family: 'Montserrat', system-ui, sans-serif;
     font-weight: 700;
     text-transform: uppercase;
+  }
+
+  .loadError {
+    margin: 32px 0 0;
+    text-align: center;
+    font-size: 16px;
+    opacity: 0.75;
   }
 
   .basketRow {

@@ -55,3 +55,36 @@ change (e.g. adding a field) with:
 ```bash
 npm run deploy
 ```
+
+## Resources page
+
+The Resources page (`/resources`) is driven by two document types:
+
+- **Resource section** — a shelf on the page ("For Girls", "For Parents",
+  …): name, subtitle, and a number for its order on the page.
+- **Resource** — one item: title, short description, which section it's
+  in, which life stages it's for (none ticked = "All stages"), type,
+  source, and either an uploaded PDF, a link, or neither ("coming soon").
+
+Within a section, items sort automatically by their earliest life stage
+(Childhood first, "All stages" last); the optional **Sort order** field
+only reorders items that share a stage.
+
+The life-stage list lives in two places that must match:
+`schemaTypes/resource.ts` (the Studio checkboxes) and `LIFE_STAGES` in the
+site's `src/lib/sanity.ts` (the page's filter buttons).
+
+### One-time import of the original resources
+
+`seed/resources.ndjson` holds the six sections and 24 resources that were
+hard-coded on the page before it moved to Sanity. The 8 PDFs are pulled
+from the live site during import. Run once, from this folder:
+
+```bash
+npx sanity dataset import seed/resources.ndjson production --replace
+```
+
+`--replace` makes it safe to re-run: the documents have fixed IDs, so a
+second run overwrites them rather than creating duplicates. Don't re-run
+it after staff have started editing resources, or their edits to these
+24 items will be overwritten.
