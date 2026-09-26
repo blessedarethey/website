@@ -343,7 +343,7 @@ const HOSTS = [
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -353,13 +353,13 @@ const HOSTS = [
     text-align: center;
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     color: var(--color-cream);
   }
 
   .subscribe {
-    padding: 24px 48px 28px;
+    padding: 24px var(--gutter) 28px;
     background: var(--color-stone);
     border-bottom: 1px solid #d8b9ab;
     max-width: 1180px;
@@ -373,7 +373,7 @@ const HOSTS = [
   }
 
   .subscribeTitle {
-    font-size: 45px;
+    font-size: clamp(28px, 6.43vw, 45px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -451,7 +451,7 @@ const HOSTS = [
   }
 
   .series {
-    padding: 40px 48px 48px;
+    padding: 40px var(--gutter) 48px;
     background: var(--color-cream);
     border-top: 1px solid var(--color-stone);
   }
@@ -469,14 +469,14 @@ const HOSTS = [
   .seriesHeading {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 40px;
+    font-size: clamp(25px, 5.71vw, 40px);
     line-height: 1.14;
     margin: 0;
     color: var(--color-heading);
   }
 
   .seriesHeading--lg {
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
   }
 
   .seriesCard {
@@ -495,7 +495,7 @@ const HOSTS = [
   }
 
   .seriesTitle {
-    font-size: 28px;
+    font-size: clamp(22px, 4.0vw, 28px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -577,7 +577,7 @@ const HOSTS = [
   }
 
   .voices {
-    padding: 40px 48px 48px;
+    padding: 40px var(--gutter) 48px;
     background: var(--color-white);
     border-top: 1px solid var(--color-stone);
   }
@@ -589,7 +589,7 @@ const HOSTS = [
   }
 
   .voicesHeading {
-    font-size: 42px;
+    font-size: clamp(26px, 6.0vw, 42px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -650,7 +650,7 @@ const HOSTS = [
   .hostName {
     font-family: 'Sorts Mill Goudy', Georgia, serif;
     font-weight: 400;
-    font-size: 28px;
+    font-size: clamp(22px, 4.0vw, 28px);
     line-height: 1.16;
     margin: 0 0 10px;
     text-wrap: pretty;
@@ -690,7 +690,7 @@ const HOSTS = [
   }
 
   .submitTopic {
-    padding: 40px 48px 48px;
+    padding: 40px var(--gutter) 48px;
     background: var(--color-cream);
     border-top: 1px solid var(--color-stone);
     max-width: 1180px;
@@ -726,5 +726,36 @@ const HOSTS = [
     margin: 20px 0 0;
     font-size: 14px;
     opacity: 0.7;
+  }
+
+  @media (max-width: 800px) {
+    .episodeGrid {
+      grid-template-columns: 1fr;
+    }
+
+    .hostGrid {
+      grid-template-columns: 1fr;
+      gap: 56px;
+      max-width: 440px;
+    }
+
+    .voicesIntro {
+      margin-bottom: 40px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .seriesCard {
+      padding: 32px 20px 28px;
+    }
+
+    .episodeRow {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .intro {
+      font-size: 17px;
+    }
   }
 </style>

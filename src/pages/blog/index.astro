@@ -125,7 +125,7 @@ const latestByTheme = THEMES.map((t) => ({
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -135,13 +135,13 @@ const latestByTheme = THEMES.map((t) => ({
     text-align: center;
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     color: var(--color-cream);
   }
 
   .intro {
-    padding: 48px 48px 52px;
+    padding: 48px var(--gutter) 52px;
     background: var(--color-stone);
     border-bottom: 1px solid #d8b9ab;
   }
@@ -153,7 +153,7 @@ const latestByTheme = THEMES.map((t) => ({
   }
 
   .introHeading {
-    font-size: 42px;
+    font-size: clamp(26px, 6.0vw, 42px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -195,7 +195,7 @@ const latestByTheme = THEMES.map((t) => ({
   }
 
   .posts {
-    padding: 48px 48px 56px;
+    padding: 48px var(--gutter) 56px;
     background: var(--color-white);
   }
 
@@ -207,7 +207,7 @@ const latestByTheme = THEMES.map((t) => ({
   .postsHeading {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 34px;
+    font-size: clamp(22px, 4.86vw, 34px);
     line-height: 1.15;
     margin: 0 0 36px;
     text-align: center;
@@ -318,7 +318,7 @@ const latestByTheme = THEMES.map((t) => ({
   }
 
   .topic {
-    padding: 48px 48px 56px;
+    padding: 48px var(--gutter) 56px;
     background: var(--color-cream);
     border-top: 1px solid var(--color-stone);
   }
@@ -330,7 +330,7 @@ const latestByTheme = THEMES.map((t) => ({
   }
 
   .topicHeading {
-    font-size: 38px;
+    font-size: clamp(24px, 5.43vw, 38px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;

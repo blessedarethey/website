@@ -23,6 +23,16 @@
   --font-body: 'Karla', system-ui, sans-serif;
 
   --content-max: 1360px;
+
+  /* Side padding for every full-width section. Phones get a narrower
+     gutter so text isn't squeezed into a ~290px column. */
+  --gutter: 48px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 22px;
+  }
 }
 
 @font-face {
@@ -89,7 +99,7 @@ img {
 
 .eyebrow {
   margin: 0;
-  font-size: 42px;
+  font-size: clamp(26px, 6vw, 42px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-heading);

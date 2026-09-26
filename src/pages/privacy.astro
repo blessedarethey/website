@@ -255,7 +255,7 @@ const blocks: Block[] = [
 
 <style>
   .hero {
-    padding: 56px 48px 48px;
+    padding: 56px var(--gutter) 48px;
     background: var(--color-charcoal-light);
   }
 
@@ -268,7 +268,7 @@ const blocks: Block[] = [
   .heroTitle {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 42px;
+    font-size: clamp(26px, 6.0vw, 42px);
     line-height: 1.15;
     margin: 0 0 14px;
     color: var(--color-cream);
@@ -283,7 +283,7 @@ const blocks: Block[] = [
   }
 
   .article {
-    padding: 56px 48px 40px;
+    padding: 56px var(--gutter) 40px;
   }
 
   .articleInner {
@@ -345,7 +345,7 @@ const blocks: Block[] = [
   }
 
   .backRow {
-    padding: 32px 48px 56px;
+    padding: 32px var(--gutter) 56px;
     border-top: 1px solid var(--color-stone);
     text-align: center;
   }

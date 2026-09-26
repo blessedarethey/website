@@ -230,7 +230,7 @@ const BELIEFS = [
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -246,7 +246,7 @@ const BELIEFS = [
   .heroTitle {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     margin: 0;
     color: var(--color-cream);
@@ -254,7 +254,7 @@ const BELIEFS = [
   }
 
   .foundersIntro {
-    padding: 72px 48px 76px;
+    padding: 72px var(--gutter) 76px;
     background: var(--color-stone);
     border-top: 1px solid #d8b9ab;
   }
@@ -269,13 +269,13 @@ const BELIEFS = [
   }
 
   .eyebrow--md {
-    font-size: 32px;
+    font-size: clamp(22px, 4.57vw, 32px);
   }
 
   .foundersHeading {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: 30px;
+    font-size: clamp(22px, 4.29vw, 30px);
     line-height: 1.15;
     margin: 0 0 18px;
     color: var(--color-heading);
@@ -292,7 +292,7 @@ const BELIEFS = [
   }
 
   .foundersGrid {
-    padding: 76px 48px 96px;
+    padding: 76px var(--gutter) 96px;
     background: var(--color-white);
     border-bottom: 1px solid var(--color-stone);
   }
@@ -334,7 +334,7 @@ const BELIEFS = [
   .founderName {
     font-family: var(--font-serif);
     font-weight: 300;
-    font-size: 30px;
+    font-size: clamp(22px, 4.29vw, 30px);
     line-height: 1.16;
     margin: 0 0 10px;
     color: var(--color-heading);
@@ -374,7 +374,7 @@ const BELIEFS = [
   }
 
   .grounds {
-    padding: 48px 48px 56px;
+    padding: 48px var(--gutter) 56px;
     background: var(--color-stone);
   }
 
@@ -432,7 +432,7 @@ const BELIEFS = [
   }
 
   .bridge {
-    padding: 40px 48px 88px;
+    padding: 40px var(--gutter) 88px;
     background: var(--color-white);
   }
 
@@ -455,7 +455,7 @@ const BELIEFS = [
 
   .bridgeEyebrow {
     margin: 0 0 28px;
-    font-size: 30px;
+    font-size: clamp(22px, 4.29vw, 30px);
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-heading);

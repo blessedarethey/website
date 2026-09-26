@@ -67,16 +67,34 @@ const socialImageURL = new URL(image, Astro.site);
 
     <header class="site-header">
       <div class="site-header__inner">
-        <div class="brand">
+        <a class="brand" href="/" aria-label="Blessed Are They — home">
           <img class="brand__logo" src="/uploads/BATlogo.jpg" alt="" />
           <img
             class="brand__wordmark"
             src="/uploads/slogan3.jpg"
             alt="Blessed Are They"
           />
+        </a>
+
+        <!-- Phone-width only: Donate stays visible and the page links
+             collapse behind a menu button (see the max-width: 900px
+             rules below). Hidden entirely on desktop. -->
+        <div class="headerActions">
+          <a href={DONATE_HREF} class="nav__donate">Donate</a>
+          <button
+            type="button"
+            class="menuToggle"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Menu"
+            data-menu-toggle
+          >
+            <span class="menuToggle__icon" aria-hidden="true"></span>
+            <span class="menuToggle__label">Menu</span>
+          </button>
         </div>
 
-        <nav class="nav">
+        <nav class="nav" id="site-nav" data-menu>
           {
             NAV_ITEMS.map((item) => (
               <a
@@ -101,11 +119,33 @@ const socialImageURL = new URL(image, Astro.site);
 
     <SiteFooter />
 
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+      const menu = document.querySelector<HTMLElement>('[data-menu]');
+      if (toggle && menu) {
+        const setOpen = (open: boolean) => {
+          toggle.setAttribute('aria-expanded', String(open));
+          menu.toggleAttribute('data-open', open);
+        };
+        toggle.addEventListener('click', () =>
+          setOpen(toggle.getAttribute('aria-expanded') !== 'true')
+        );
+        // Close after picking a link (matters for same-page anchors like
+        // /#newsletter, which don't trigger a page load) or on Escape.
+        menu.addEventListener('click', (e) => {
+          if ((e.target as HTMLElement).closest('a')) setOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') setOpen(false);
+        });
+      }
+    </script>
+
     <style>
       .utility-bar {
         background: var(--color-charcoal-light);
         color: var(--color-stone);
-        padding: 9px 48px;
+        padding: 9px var(--gutter);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -207,6 +247,155 @@ const socialImageURL = new URL(image, Astro.site);
 
       main {
         display: block;
+      }
+
+      .headerActions {
+        display: none;
+      }
+
+      .menuToggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 4px;
+        background: none;
+        border: none;
+        font-family: var(--font-body);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-charcoal);
+        cursor: pointer;
+      }
+
+      /* Three-line icon that turns into an X when the menu is open. */
+      .menuToggle__icon,
+      .menuToggle__icon::before,
+      .menuToggle__icon::after {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .menuToggle__icon {
+        position: relative;
+      }
+
+      .menuToggle__icon::before,
+      .menuToggle__icon::after {
+        content: '';
+        position: absolute;
+        left: 0;
+      }
+
+      .menuToggle__icon::before {
+        top: -6px;
+      }
+
+      .menuToggle__icon::after {
+        top: 6px;
+      }
+
+      .menuToggle[aria-expanded='true'] .menuToggle__icon {
+        background: transparent;
+      }
+
+      .menuToggle[aria-expanded='true'] .menuToggle__icon::before {
+        transform: translateY(6px) rotate(45deg);
+      }
+
+      .menuToggle[aria-expanded='true'] .menuToggle__icon::after {
+        transform: translateY(-6px) rotate(-45deg);
+      }
+
+      @media (max-width: 900px) {
+        .utility-bar {
+          flex-direction: column;
+          gap: 2px;
+          padding: 7px var(--gutter);
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-align: center;
+        }
+
+        .site-header__inner {
+          flex-wrap: nowrap;
+          gap: 12px;
+          padding: 12px var(--gutter);
+        }
+
+        .brand {
+          gap: 10px;
+          min-width: 0;
+        }
+
+        .brand__logo {
+          height: 40px;
+        }
+
+        .brand__wordmark {
+          height: 30px;
+        }
+
+        .headerActions {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-shrink: 0;
+        }
+
+        .nav {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: 4px var(--gutter) 12px;
+          background: var(--color-cream);
+          border-bottom: 1px solid var(--color-stone);
+          box-shadow: 0 12px 24px rgba(47, 47, 56, 0.08);
+        }
+
+        .nav[data-open] {
+          display: flex;
+        }
+
+        .nav__link {
+          padding: 14px 0;
+          font-size: 15px;
+        }
+
+        .nav__link + .nav__link {
+          border-top: 1px solid var(--color-stone);
+        }
+
+        /* Donate already sits in the header row on phones. */
+        .nav .nav__donate {
+          display: none;
+        }
+      }
+
+      /* Most phones: icon-only menu button so the wordmark has room. */
+      @media (max-width: 440px) {
+        .menuToggle__label {
+          display: none;
+        }
+
+        .nav__donate {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .brand__wordmark {
+          height: 24px;
+        }
       }
     </style>
   </body>

@@ -79,7 +79,7 @@ const publishedLabel = episode.publishedAt
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -98,7 +98,7 @@ const publishedLabel = episode.publishedAt
   }
 
   .heroTitle {
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -122,7 +122,7 @@ const publishedLabel = episode.publishedAt
   }
 
   .article {
-    padding: 48px 48px 56px;
+    padding: 48px var(--gutter) 56px;
   }
 
   .articleInner {
@@ -159,7 +159,7 @@ const publishedLabel = episode.publishedAt
   }
 
   .backRow {
-    padding: 40px 48px 56px;
+    padding: 40px var(--gutter) 56px;
     border-top: 1px solid var(--color-stone);
     text-align: center;
   }

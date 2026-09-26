@@ -65,7 +65,7 @@ const {
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -75,13 +75,13 @@ const {
     text-align: center;
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     color: var(--color-stone);
   }
 
   .profile {
-    padding: 56px 48px 72px;
+    padding: 56px var(--gutter) 72px;
   }
 
   .profileInner {
@@ -112,7 +112,7 @@ const {
   .name {
     font-family: 'Sorts Mill Goudy', Georgia, serif;
     font-weight: 400;
-    font-size: 38px;
+    font-size: clamp(24px, 5.43vw, 38px);
     line-height: 1.14;
     margin: 0 0 10px;
     text-wrap: pretty;

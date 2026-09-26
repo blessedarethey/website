@@ -43,7 +43,7 @@ const visionPillars = [
         <span class="hero__line"
           >Blessed Are They is a Catholic nonprofit seeking to unite
           scientific accuracy and Catholic faith in forming</span
-        ><br />
+        > <br />
         <span class="hero__line"
           >the next generation — uncompromisingly faithful to the Church.</span
         >
@@ -60,11 +60,11 @@ const visionPillars = [
         <span class="mission__line"
           >Not a better pamphlet. Not one good lesson. A generation formed to
           know how and why their bodies</span
-        ><br />
+        > <br />
         <span class="mission__line"
           >were made — until the truth of the human person is simply the air
           Catholic families breathe.</span
-        ><br />
+        > <br />
         <span class="mission__line"
           >That&rsquo;s the gap <i>Blessed Are They</i> exists to close.</span
         >
@@ -220,7 +220,7 @@ const visionPillars = [
     align-items: center;
     justify-content: center;
     gap: 20px;
-    padding: 8px 48px 12px;
+    padding: 8px var(--gutter) 12px;
     text-align: center;
   }
 
@@ -237,11 +237,14 @@ const visionPillars = [
     display: block;
   }
 
+  /* Offsets as percentages of the wordmark (same spot as the design's
+     20px/42px at the full 620px width) so the mark stays put over the
+     end of "THEY" when the wordmark shrinks on phones. */
   .hero__trademark {
     position: absolute;
-    right: 20px;
-    top: 42px;
-    font-size: 17px;
+    right: 3.226%;
+    top: 29.38%;
+    font-size: clamp(10px, 2.75vw, 17px);
     letter-spacing: 0.04em;
     color: var(--color-cream);
     opacity: 0.75;
@@ -249,7 +252,7 @@ const visionPillars = [
 
   .hero__headline {
     font-family: var(--font-serif);
-    font-size: 36px;
+    font-size: clamp(22px, 5.14vw, 36px);
     line-height: 1.3;
     color: var(--color-cream);
     margin: 0;
@@ -286,6 +289,12 @@ const visionPillars = [
     .hero__subhead .hero__line {
       white-space: normal;
     }
+
+    /* Once the lines wrap on their own, this mid-sentence break just
+       strands a fragment ("…in forming" / "the next generation…"). */
+    .hero__subhead br {
+      display: none;
+    }
   }
 
   /* ── Shared section chrome ───────────────────────────────────────── */
@@ -303,7 +312,7 @@ const visionPillars = [
   /* ── Mission ──────────────────────────────────────────────────────── */
 
   .mission {
-    padding: 48px 48px 52px;
+    padding: 48px var(--gutter) 52px;
     background: var(--color-stone);
     border-bottom: 1px solid #d8b9ab;
   }
@@ -339,12 +348,23 @@ const visionPillars = [
     .mission__line {
       white-space: normal;
     }
+
+    /* Same reason as the hero subhead: let it flow as one paragraph. */
+    .mission__body br {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .mission__body {
+      font-size: 18px;
+    }
   }
 
   /* ── Vision ───────────────────────────────────────────────────────── */
 
   .vision {
-    padding: 40px 48px 48px;
+    padding: 40px var(--gutter) 48px;
     background: var(--color-white);
     border-top: 1px solid var(--color-stone);
   }
@@ -394,6 +414,17 @@ const visionPillars = [
     align-items: stretch;
   }
 
+  @media (max-width: 800px) {
+    .vision__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .vision__intro {
+      margin-bottom: 40px;
+    }
+  }
+
   .vision__card {
     padding-top: 26px;
     border-top: 2px solid var(--accent, var(--color-amber));
@@ -431,7 +462,7 @@ const visionPillars = [
     position: relative;
     max-width: 780px;
     margin: 0 auto;
-    padding: 56px 48px 64px;
+    padding: 56px var(--gutter) 64px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -440,7 +471,7 @@ const visionPillars = [
   }
 
   .donate__heading {
-    font-size: 42px;
+    font-size: clamp(26px, 6.0vw, 42px);
     letter-spacing: 0.18em;
     text-transform: uppercase;
     font-weight: 400;
@@ -504,7 +535,7 @@ const visionPillars = [
          section — one appeal, one form, covers both) ───────────────── */
 
   .newsletter {
-    padding: 28px 48px 32px;
+    padding: 28px var(--gutter) 32px;
     background: var(--color-white);
     border-top: 1px solid var(--color-stone);
     border-bottom: 1px solid var(--color-stone);
@@ -518,7 +549,7 @@ const visionPillars = [
 
   .newsletter__eyebrow {
     margin: 0 0 14px;
-    font-size: 30px;
+    font-size: clamp(22px, 4.29vw, 30px);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-heading);

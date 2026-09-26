@@ -61,7 +61,7 @@ const signatureSrc =
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -80,7 +80,7 @@ const signatureSrc =
   }
 
   .heroTitle {
-    font-size: 52px;
+    font-size: clamp(32px, 7.43vw, 52px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -98,7 +98,7 @@ const signatureSrc =
   }
 
   .article {
-    padding: 56px 48px 64px;
+    padding: 56px var(--gutter) 64px;
   }
 
   .articleInner {
@@ -153,7 +153,7 @@ const signatureSrc =
   }
 
   .backRow {
-    padding: 40px 48px 56px;
+    padding: 40px var(--gutter) 56px;
     border-top: 1px solid var(--color-stone);
   }
 

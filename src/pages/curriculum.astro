@@ -250,7 +250,7 @@ const GRADE_LEVELS = [
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -260,13 +260,13 @@ const GRADE_LEVELS = [
     text-align: center;
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     color: var(--color-cream);
   }
 
   .inDev {
-    padding: 44px 48px 48px;
+    padding: 44px var(--gutter) 48px;
     background: var(--color-stone);
     border-bottom: 1px solid #d8b9ab;
   }
@@ -313,7 +313,7 @@ const GRADE_LEVELS = [
   }
 
   .audiences {
-    padding: 88px 48px 96px;
+    padding: 88px var(--gutter) 96px;
     background: var(--color-white);
   }
 
@@ -382,7 +382,7 @@ const GRADE_LEVELS = [
   }
 
   .courses {
-    padding: 92px 48px 104px;
+    padding: 92px var(--gutter) 104px;
     background: var(--color-cream);
   }
 
@@ -397,7 +397,7 @@ const GRADE_LEVELS = [
   }
 
   .coursesHeading {
-    font-size: 44px;
+    font-size: clamp(27px, 6.29vw, 44px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;

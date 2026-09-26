@@ -79,7 +79,7 @@ const FEATURES = [
 
 <style>
   .hero {
-    padding: 40px 48px 44px;
+    padding: 40px var(--gutter) 44px;
     background: var(--color-charcoal-light);
   }
 
@@ -89,13 +89,13 @@ const FEATURES = [
     text-align: center;
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 46px;
+    font-size: clamp(29px, 6.57vw, 46px);
     line-height: 1.15;
     color: var(--color-cream);
   }
 
   .intro {
-    padding: 48px 48px 52px;
+    padding: 48px var(--gutter) 52px;
     background: var(--color-stone);
     border-bottom: 1px solid #d8b9ab;
   }
@@ -107,7 +107,7 @@ const FEATURES = [
   }
 
   .introHeading {
-    font-size: 42px;
+    font-size: clamp(26px, 6.0vw, 42px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -149,7 +149,7 @@ const FEATURES = [
   }
 
   .features {
-    padding: 64px 48px 68px;
+    padding: 64px var(--gutter) 68px;
     background: var(--color-white);
   }
 
@@ -198,7 +198,7 @@ const FEATURES = [
   }
 
   .request {
-    padding: 56px 48px 64px;
+    padding: 56px var(--gutter) 64px;
     background: var(--color-cream);
     border-top: 1px solid var(--color-stone);
   }
@@ -214,7 +214,7 @@ const FEATURES = [
   }
 
   .requestHeading {
-    font-size: 34px;
+    font-size: clamp(22px, 4.86vw, 34px);
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
