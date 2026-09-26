@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisodes, excerpt } from '../../lib/podcast';
+import { getEpisodes, excerpt, type Episode } from '../../lib/podcast';
 
 // Real links where we have them; iHeart Radio isn't set up yet, so it
 // stays a placeholder until the site owner sends the real one.
@@ -28,42 +28,18 @@ const MIC_PATHS = [
   'M22 55h20',
 ];
 
-// "The First Series" shows the actual first four published episodes,
-// oldest first, linked to their real (playable) episode pages — the
-// real episodes match this planned arc closely enough that keeping a
-// separate hand-written version alongside them would just drift out of
-// sync. getEpisodes() returns newest-first; reverse for chronological
-// order here. "The Second Series" below stays hand-written since none
-// of those episodes exist yet.
-let firstSeries: { n: string; title: string; body: string; href: string }[] =
-  [];
-try {
-  const episodes = await getEpisodes();
-  firstSeries = [...episodes]
-    .reverse()
-    .slice(0, 4)
-    .map((ep, i) => ({
-      n: `Episode ${i + 1}`,
-      title: ep.title,
-      body: ep.description ? excerpt(ep.description) : '',
-      href: `/podcast/${ep.slug}`,
-    }));
-} catch {
-  // Feed unreachable — fall back to the empty-state message below rather
-  // than crashing the page.
-}
+// Both series are filled from the real feed, oldest first: published
+// episodes 1–4 make up "The First Series" and 5–8 "The Second Series",
+// each linked to its playable episode page. Second Series slots that
+// haven't been published yet show the planned title/description below
+// until the real episode replaces them. Anything past episode 8 lands in
+// "More Episodes" so a new upload never silently goes missing from the
+// page. getEpisodes() returns newest-first; reverse for chronological.
+type EpisodeRow = { n: string; title: string; body: string; href?: string };
 
-const SECOND_SERIES = [
-  {
-    n: 'Episode 5',
-    title: 'The Birds',
-    body: 'You guessed it: female anatomy.',
-  },
-  {
-    n: 'Episode 6',
-    title: 'The Bees',
-    body: 'Makes sense, right? Male anatomy.',
-  },
+const SECOND_SERIES_PLAN: EpisodeRow[] = [
+  { n: 'Episode 5', title: 'The Birds', body: 'You guessed it: female anatomy.' },
+  { n: 'Episode 6', title: 'The Bees', body: 'Makes sense, right? Male anatomy.' },
   {
     n: 'Episode 7',
     title: 'Designed for Complementarity',
@@ -75,6 +51,28 @@ const SECOND_SERIES = [
     body: 'How the male and female bodies are designed to be in communion.',
   },
 ];
+
+let published: Episode[] = [];
+try {
+  published = [...(await getEpisodes())].reverse();
+} catch {
+  // Feed unreachable — the First Series falls back to the empty-state
+  // message and the Second Series to its planned episodes, rather than
+  // crashing the page.
+}
+
+const toRow = (ep: Episode, index: number): EpisodeRow => ({
+  n: `Episode ${index + 1}`,
+  title: ep.title,
+  body: ep.description ? excerpt(ep.description) : '',
+  href: `/podcast/${ep.slug}`,
+});
+
+const firstSeries = published.slice(0, 4).map((ep, i) => toRow(ep, i));
+const secondSeries = SECOND_SERIES_PLAN.map((planned, i) =>
+  published[4 + i] ? toRow(published[4 + i], 4 + i) : planned
+);
+const moreEpisodes = published.slice(8).map((ep, i) => toRow(ep, 8 + i));
 
 const HOSTS = [
   {
@@ -256,12 +254,14 @@ const HOSTS = [
       </svg>
       <h3 class="seriesTitle">The Birds &amp; the Bees</h3>
       <div class="episodeGrid">
-        {SECOND_SERIES.map((ep) => (
+        {secondSeries.map((ep) => (
           <div class="episodeRow">
             <p class="episodeNum">{ep.n}</p>
             <div>
-              <p class="episodeTitle">{ep.title}</p>
-              <p class="episodeBody">{ep.body}</p>
+              <p class="episodeTitle">
+                {ep.href ? <a href={ep.href}>{ep.title}</a> : ep.title}
+              </p>
+              {ep.body && <p class="episodeBody">{ep.body}</p>}
             </div>
           </div>
         ))}
@@ -272,6 +272,30 @@ const HOSTS = [
       </div>
     </div>
   </section>
+
+  {moreEpisodes.length > 0 && (
+    <section class="series">
+      <div class="seriesIntro">
+        <p class="eyebrow eyebrow--sm">Podcast</p>
+        <h2 class="seriesHeading">More Episodes</h2>
+      </div>
+      <div class="seriesCard">
+        <div class="episodeGrid">
+          {moreEpisodes.map((ep) => (
+            <div class="episodeRow">
+              <p class="episodeNum">{ep.n}</p>
+              <div>
+                <p class="episodeTitle">
+                  <a href={ep.href}>{ep.title}</a>
+                </p>
+                {ep.body && <p class="episodeBody">{ep.body}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <section id="voices" class="voices">
     <div class="voicesIntro">
