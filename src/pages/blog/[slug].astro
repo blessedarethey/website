@@ -2,6 +2,7 @@
 import { toHTML } from '@portabletext/to-html';
 import Layout from '../../layouts/Layout.astro';
 import { getBlogPost } from '../../lib/sanity';
+import { excerpt } from '../../lib/podcast';
 
 const THEME_LABELS = { good: 'The Good', true: 'The True', beautiful: 'The Beautiful' };
 
@@ -20,6 +21,24 @@ if (!post) {
 }
 
 const bodyHtml = post.body ? toHTML(post.body as any) : '';
+// Posts without an excerpt still need a real search-result snippet:
+// fall back to the opening of the post itself.
+const description =
+  post.excerpt?.trim() ||
+  (bodyHtml ? excerpt(bodyHtml, 160) : `${post.title} — from the Blessed Are They blog.`);
+const postUrl = new URL(`/blog/${post.slug}`, Astro.site).toString();
+const blogPostingLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description,
+  datePublished: post.publishedAt,
+  url: postUrl,
+  mainEntityOfPage: postUrl,
+  image: new URL('/og-image.jpg', Astro.site).toString(),
+  ...(post.author ? { author: { '@type': 'Person', name: post.author } } : {}),
+  publisher: { '@id': `${Astro.site}#organization` },
+};
 // Only one founder's signature graphic exists so far — everyone else's
 // "Written by" just shows their name as plain text until a matching
 // signature image is added.
@@ -29,7 +48,14 @@ const signatureSrc =
     : null;
 ---
 
-<Layout title={post.title} description={post.excerpt} active="blog">
+<Layout
+  title={post.title}
+  description={description}
+  active="blog"
+  type="article"
+  publishedAt={post.publishedAt}
+  jsonLd={blogPostingLd}
+>
   <section class="hero">
     <div class="heroInner">
       {post.theme && (

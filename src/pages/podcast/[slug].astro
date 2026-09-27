@@ -27,6 +27,24 @@ function formatDuration(seconds?: number): string | null {
 }
 
 const duration = formatDuration(episode.durationSeconds);
+const episodeUrl = new URL(`/podcast/${episode.slug}`, Astro.site).toString();
+const episodeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'PodcastEpisode',
+  name: episode.title,
+  url: episodeUrl,
+  ...(episode.description ? { description: excerpt(episode.description, 300) } : {}),
+  ...(episode.publishedAt ? { datePublished: episode.publishedAt } : {}),
+  ...(episode.durationSeconds ? { timeRequired: `PT${Math.round(episode.durationSeconds)}S` } : {}),
+  ...(episode.audioUrl
+    ? { associatedMedia: { '@type': 'MediaObject', contentUrl: episode.audioUrl } }
+    : {}),
+  partOfSeries: {
+    '@type': 'PodcastSeries',
+    name: 'Blessed Are They — The Podcast',
+    url: new URL('/podcast', Astro.site).toString(),
+  },
+};
 const publishedLabel = episode.publishedAt
   ? new Date(episode.publishedAt).toLocaleDateString(undefined, {
       year: 'numeric',
@@ -38,8 +56,9 @@ const publishedLabel = episode.publishedAt
 
 <Layout
   title={episode.title}
-  description={episode.description ? excerpt(episode.description, 160) : 'Blessed Are They podcast'}
+  description={episode.description ? excerpt(episode.description, 160) : 'An episode of the Blessed Are They podcast.'}
   active="podcast"
+  jsonLd={episodeLd}
 >
   <section class="hero">
     <div class="heroInner">

@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getEpisodes, excerpt, type Episode } from '../../lib/podcast';
+import { getEpisodes, excerpt, FEED_URL, type Episode } from '../../lib/podcast';
 
 // Real links where we have them; iHeart Radio isn't set up yet, so it
 // stays a placeholder until the site owner sends the real one.
@@ -107,8 +107,17 @@ const HOSTS = [
 
 <Layout
   title="Podcast"
-  description="The Blessed Are They podcast — conversations on faith, the body, and forming the next generation."
+  description="The Blessed Are They podcast — a pediatrician, an OB/GYN, and a ministry leader on faith, the body, and forming the next generation."
   active="podcast"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'PodcastSeries',
+    name: 'Blessed Are They — The Podcast',
+    url: new URL('/podcast', Astro.site).toString(),
+    webFeed: FEED_URL,
+    sameAs: PLATFORMS.filter((p) => p.href.startsWith('http')).map((p) => p.href),
+    publisher: { '@id': `${Astro.site}#organization` },
+  }}
 >
   <section class="hero">
     <h1 class="heroTitle">Podcast</h1>
@@ -315,6 +324,8 @@ const HOSTS = [
               src={host.photo}
               alt={host.name}
               style={{ objectPosition: host.objectPosition }}
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <p class="hostLabel">{host.label}</p>

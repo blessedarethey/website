@@ -72,7 +72,7 @@ const BELIEFS = [
       {FOUNDERS.map((f) => (
         <div class="founderCard">
           <div class="founderPhoto">
-            <img src={f.photo} alt={f.name} style={{ objectPosition: f.objectPosition }} />
+            <img src={f.photo} alt={f.name} style={{ objectPosition: f.objectPosition }} loading="lazy" decoding="async" />
           </div>
           <h3 class="founderName">{f.name}</h3>
           <p class="founderRole" set:html={f.role.replace('\n', '<br />')} />

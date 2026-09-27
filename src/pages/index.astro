@@ -22,19 +22,27 @@ const visionPillars = [
 
 <Layout
   title="Home"
-  description="Blessed Are They is a Catholic nonprofit seeking to unite scientific accuracy and Catholic faith in forming the next generation — uncompromisingly faithful to the Church."
+  fullTitle="Blessed Are They | Catholic Reproductive Health Education"
+  description="A Catholic nonprofit uniting scientific accuracy and Catholic faith to form the next generation — reproductive health education for families, schools, and parishes."
   active="home"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Blessed Are They',
+    url: Astro.site?.toString(),
+    publisher: { '@id': `${Astro.site}#organization` },
+  }}
 >
   <section class="hero">
     <div class="hero__content">
-      <span class="hero__wordmarkWrap">
+      <h1 class="hero__wordmarkWrap">
         <img
           class="hero__wordmark"
           src="/uploads/slogan1-cream.png"
-          alt="blessed are they"
+          alt="Blessed Are They"
         />
-        <span class="hero__trademark">™</span>
-      </span>
+        <span class="hero__trademark" aria-hidden="true">™</span>
+      </h1>
       <p class="hero__headline">
         <span class="hero__line">There is a gap in Catholic culture.</span><br />
         <span class="hero__line">We are bridging it.</span>
@@ -224,11 +232,16 @@ const visionPillars = [
     text-align: center;
   }
 
+  /* An <h1> (the page's main heading, for search engines and screen
+     readers) — margin/weight reset so it lays out like the plain wrapper
+     it replaced. */
   .hero__wordmarkWrap {
     position: relative;
     display: inline-block;
     width: 100%;
     max-width: 620px;
+    margin: 0;
+    font-weight: 400;
   }
 
   .hero__wordmark {

@@ -2,27 +2,65 @@
 import '../styles/global.css';
 import { NAV_ITEMS, DONATE_HREF, type NavKey } from '../lib/nav';
 import SiteFooter from '../components/SiteFooter.astro';
+import { SITE_DESCRIPTION } from '../lib/site';
 
 interface Props {
   title: string;
   description?: string;
   active?: NavKey;
+  /** Replaces the whole "<title> | Blessed Are They" pattern — used by the
+   *  homepage, where the brand should lead instead of "Home". */
+  fullTitle?: string;
   /** Social-share (Open Graph/Twitter card) image, absolute or root-relative.
-   *  Defaults to the crest — swap in a proper 1200x630 og-image.jpg later
-   *  for a nicer link preview. */
+   *  Defaults to the 1200x630 site card. */
   image?: string;
+  /** 'article' for blog posts (adds published time for link previews). */
+  type?: 'website' | 'article';
+  publishedAt?: string;
+  /** Extra schema.org JSON-LD for this page (BlogPosting, PodcastEpisode…),
+   *  added alongside the site-wide Organization block. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
-  description = 'Blessed Are They',
+  description = SITE_DESCRIPTION,
   active,
-  image = '/uploads/BATlogo.jpg',
+  fullTitle,
+  image = '/og-image.jpg',
+  type = 'website',
+  publishedAt,
+  jsonLd,
 } = Astro.props;
 
-const pageTitle = `${title} | Blessed Are They`;
+const pageTitle = fullTitle || `${title} | Blessed Are They`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+// Google Analytics 4 measurement ID ("G-…", from GA → Admin → Data
+// streams). Empty = analytics off. Only loads on the deployed site, so
+// local previews and testing don't count as visits.
+const GA_MEASUREMENT_ID = '';
+const loadAnalytics = import.meta.env.PROD && GA_MEASUREMENT_ID !== '';
+
+// Tells search engines who runs the site (name, logo, contact, social
+// profiles) — the basis for Google's knowledge panel.
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  '@id': `${Astro.site}#organization`,
+  name: 'Blessed Are They',
+  url: Astro.site?.toString(),
+  logo: new URL('/uploads/BATlogo.jpg', Astro.site).toString(),
+  description: SITE_DESCRIPTION,
+  email: 'hello@blessedarethey.com',
+  nonprofitStatus: 'Nonprofit501c3',
+  sameAs: [
+    'https://www.instagram.com/blessedaretheyministry/',
+    'https://www.facebook.com/profile.php?id=61587253109351',
+  ],
+};
+const ldBlocks = [organizationLd, ...(jsonLd ? [jsonLd].flat() : [])];
 ---
 
 <!doctype html>
@@ -34,19 +72,47 @@ const socialImageURL = new URL(image, Astro.site);
     <meta name="google-site-verification" content="aQvAkm0bYBMxvbsSyEtB9epE-fGCF8XvuQmMpI2dhgM" />
     <title>{pageTitle}</title>
     <link rel="canonical" href={canonicalURL} />
-    <link rel="icon" type="image/jpeg" href="/uploads/BATlogo.jpg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#4c4c58" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Blessed Are They" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
+    {type === 'article' && publishedAt && (
+      <meta property="article:published_time" content={publishedAt} />
+    )}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageURL} />
+
+    {ldBlocks.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+
+    {loadAnalytics && (
+      <>
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        ></script>
+        <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+        </script>
+      </>
+    )}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

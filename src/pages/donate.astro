@@ -22,16 +22,16 @@ const GOES_TO = [
 
 <Layout
   title="Donate"
-  description="Support Blessed Are They — fund Phase I of the curriculum, grades 4–5."
+  description="Support Blessed Are They, a 501(c)(3) Catholic nonprofit. Your tax-deductible gift funds Phase I of our reproductive health curriculum for grades 4–5."
   active="donate"
 >
   <section class="hero">
     <div class="heroInner">
       <p class="heroEyebrow">Support</p>
-      <span class="heroWordmarkWrap">
-        <img class="heroWordmark" src="/uploads/slogan1-cream.png" alt="blessed are they" />
-        <span class="heroTrademark">™</span>
-      </span>
+      <h1 class="heroWordmarkWrap">
+        <img class="heroWordmark" src="/uploads/slogan1-cream.png" alt="Support Blessed Are They" />
+        <span class="heroTrademark" aria-hidden="true">™</span>
+      </h1>
     </div>
   </section>
 
@@ -161,11 +161,15 @@ const GOES_TO = [
     color: var(--color-stone);
   }
 
+  /* <h1> for search engines/screen readers; reset so it lays out like
+     the plain wrapper it replaced. */
   .heroWordmarkWrap {
     position: relative;
     display: inline-block;
     width: 100%;
     max-width: 420px;
+    margin: 0;
+    font-weight: 400;
   }
 
   .heroWordmark {
