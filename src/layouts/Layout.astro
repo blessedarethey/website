@@ -40,7 +40,7 @@ const socialImageURL = new URL(image, Astro.site);
 // Google Analytics 4 measurement ID ("G-…", from GA → Admin → Data
 // streams). Empty = analytics off. Only loads on the deployed site, so
 // local previews and testing don't count as visits.
-const GA_MEASUREMENT_ID = '';
+const GA_MEASUREMENT_ID = 'G-JNDCM9YMFR';
 const loadAnalytics = import.meta.env.PROD && GA_MEASUREMENT_ID !== '';
 
 // Tells search engines who runs the site (name, logo, contact, social
@@ -103,14 +103,15 @@ const ldBlocks = [organizationLd, ...(jsonLd ? [jsonLd].flat() : [])];
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         ></script>
-        <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-          gtag('js', new Date());
-          gtag('config', GA_MEASUREMENT_ID);
-        </script>
+        {/* Google's standard snippet, written out as-is (not wrapped by
+            define:vars) so gtag() stays global for any custom events. */}
+        <script
+          is:inline
+          set:html={`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');`}
+        />
       </>
     )}
 
