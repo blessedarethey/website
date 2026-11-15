@@ -57,6 +57,32 @@ Website for Blessed Are They, a Catholic nonprofit: https://www.blessedarethey.c
   (https://claude.ai/artifact/1pwo57xLQz6g3FezpDadYf). Update it when the
   publishing steps in Sanity change.
 
+## Design system
+
+The brand's design system is a claude.ai artifact:
+https://claude.ai/artifact/DDznxvBuZAqYYRpq4JgUao. Use the Artifact tool's
+`read` action to read `project/README.md` (the brand book) and
+`project/tokens.json` (exact values). Read it before any visual change, and
+follow it over older designs.
+
+- The site's color, font and spacing variables are in
+  `src/styles/global.css`, under the same names as the tokens
+  (`--color-cream`, `--font-serif`, and so on). Use the variables. Don't
+  type hex values into pages.
+- The essentials:
+  - Grounds are cream, stone and white. Ink is charcoal, with `heading` for
+    headings.
+  - The accents (amber, rose, sage, dusk) are fills and rules only, never
+    text on a light ground. Their `deep-` partners are for text.
+  - The one action color is `deep-rose` with white text.
+  - Three items side by side take amber, rose and sage, in that order.
+  - Fonts: Roca for headlines (italic, never uppercase), Karla for body text
+    and uppercase labels, Sorts Mill Goudy for Scripture and Church
+    quotations.
+  - Flat design: rules instead of boxes, no shadows, no gradients, no emoji.
+- The system's print-only parts (workbooks, covers, flyers) and the extra
+  print colors aren't used on the website.
+
 ## Decisions already made
 
 - No public street address anywhere on the site.
