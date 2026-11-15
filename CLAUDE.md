@@ -85,6 +85,8 @@ follow it over older designs.
 
 ## Decisions already made
 
+- Email sign-ups go to Kit (the form posts directly to Kit). Don't store
+  sign-ups in Sanity. That idea was dropped.
 - No public street address anywhere on the site.
 - No YouTube link in the footer. Facebook and Instagram only.
 - The Venmo QR code on the donate page is black.
