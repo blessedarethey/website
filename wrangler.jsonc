@@ -1,0 +1,10 @@
+// Cloudflare Workers config. The Astro Cloudflare adapter fills in the
+// rest at build time (the server entry point and the static-assets
+// binding), so this only sets what's specific to this site.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blessedarethey-website",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true }
+}

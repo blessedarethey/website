@@ -1,24 +1,20 @@
 import { defineConfig } from 'astro/config';
-import netlify from '@astrojs/netlify';
+import cloudflare from '@astrojs/cloudflare';
 
-// SSR ('server') rather than static output — the donation portal and the
-// subscriber login (added in later phases) both need server-side code to
-// run on each request, not just at build time.
+// SSR ('server') rather than static output — the blog, podcast, and
+// resources pages read Sanity and the podcast feed on each request, so new
+// content shows up without a rebuild.
 export default defineConfig({
   output: 'server',
-  adapter: netlify({
-    // Local-dev-only emulation features. edgeFunctions is off because this
-    // project has no netlify/edge-functions directory — the adapter still
-    // tries to spawn a local Deno server for it by default, and on a
-    // machine without a compatible Deno install that hangs `astro dev`
-    // with an unhandled rejection before any page can render.
-    devFeatures: { edgeFunctions: false },
+  adapter: cloudflare({
+    // Images are already resized ahead of time and served as plain files;
+    // 'passthrough' keeps it that way instead of switching on Cloudflare
+    // Images (a separate, metered product).
+    imageService: 'passthrough',
   }),
   site: 'https://www.blessedarethey.com',
-  // The Netlify adapter auto-enables session storage via Netlify Blobs unless
-  // told otherwise, which pushed the account toward a paid plan before we
-  // needed it. Nothing on the site uses sessions yet — turn this back on
-  // (remove the `false` and configure a driver) once the subscriber-login
-  // phase actually needs them.
+  // Nothing on the site uses sessions yet. With sessions on, the Cloudflare
+  // adapter would also provision a KV namespace for them — turn this back
+  // on (remove the `false`) once the subscriber-login phase needs it.
   session: false,
 });
