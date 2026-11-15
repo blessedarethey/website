@@ -1,6 +1,6 @@
 # Blessed Are They — website
 
-Astro (SSR) site backed by Sanity, deployed to Netlify.
+Astro (SSR) site backed by Sanity, deployed to Cloudflare Workers.
 
 ## Stack
 
@@ -8,7 +8,10 @@ Astro (SSR) site backed by Sanity, deployed to Netlify.
   donation portal and subscriber login are added (both require server code).
 - **Sanity** — content backend (blog posts, podcast episodes). Project ID
   `s7qx1s92`, organization `o39n34uh3`, dataset `production`.
-- **Netlify** — hosting, via the `@astrojs/netlify` adapter.
+- **Cloudflare Workers** — hosting, via the `@astrojs/cloudflare` adapter.
+  Cloudflare builds and deploys automatically on every push to `main`
+  (Workers Builds: `npm run build`, then `npx wrangler deploy`). Worker
+  settings live in `wrangler.jsonc`.
 
 ## Local development
 
@@ -25,12 +28,19 @@ Blog posts and podcast episodes are read from Sanity document types named
 Those document types still need to be created in Sanity Studio — until then,
 `/blog` and `/podcast` render an empty state rather than erroring.
 
-## Known issue
+## Versions
 
-Astro is pinned to `7.2.10` (not `^7.2.10`) because `astro@7.3.0` broke an
-internal export that `@astrojs/netlify@8.2.5` depends on, and the build fails
-under that combination. Safe to bump once the adapter publishes a fix —
-just confirm `npm run build` still succeeds before merging the upgrade.
+`astro` and `@astrojs/cloudflare` are pinned to exact versions because the
+adapter depends on Astro internals and needs a matching Astro release. When
+upgrading, bump them together and confirm `npm run build` still succeeds
+before merging.
+
+To try the production build locally the way Cloudflare runs it:
+
+```bash
+npm run build
+npx wrangler dev
+```
 
 ## Status
 
