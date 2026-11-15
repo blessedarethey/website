@@ -15,5 +15,8 @@
     "@sanity/client": "^8.5.0",
     "astro": "7.4.12",
     "fast-xml-parser": "^5.11.1"
+  },
+  "devDependencies": {
+    "wrangler": "4.162.0"
   }
 }
